@@ -28,9 +28,9 @@
     --c-orange: #f25500;
     --c-orange-dark: #993400;
 
-    /* Perfectly Balanced Landscape Zoom */
-    --card-w: clamp(48px, 7.2vw, 62px);
-    --card-h: clamp(70px, 19.5vh, 92px);
+    /* Balanced Zoom Dimensions */
+    --card-w: clamp(46px, 7vw, 60px);
+    --card-h: clamp(68px, 19vh, 90px);
     --active-glow-color: rgba(234, 35, 35, 0.7);
 
     /* Dynamic Difficulty Color */
@@ -298,19 +298,23 @@
   .btn.friends-btn { background: linear-gradient(135deg, #8a2be2 0%, #4a00e0 100%) !important; }
   .btn.join-btn { flex: 0 0 78px; background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%) !important; }
 
-  /* BOT COUNT & SLIDER */
-  .bot-count-grid { display: flex; gap: 5px; width: 100%; }
+  /* 8-PLAYER BOT COUNT GRID */
+  .bot-count-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    width: 100%;
+  }
   .bot-count-btn {
-    flex: 1;
-    padding: 8px 4px;
+    padding: 7px 4px;
     border-radius: 8px;
     background: rgba(255,255,255,0.06);
     border: 1.5px solid rgba(255,255,255,0.18);
     color: #fff;
     font-weight: 900;
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     cursor: pointer;
-    min-height: 36px;
+    min-height: 34px;
   }
   .bot-count-btn.active {
     background: linear-gradient(135deg, #ffc400, #f77000);
@@ -368,7 +372,7 @@
     background: #0f182b;
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 18px;
-    width: min(92vw, 390px);
+    width: min(92vw, 410px);
     max-height: 90vh;
     overflow-y: auto;
     padding: 16px 14px;
@@ -442,7 +446,7 @@
     background: linear-gradient(180deg, #101c36 0%, #090e1a 100%);
     border: 2px solid rgba(255, 215, 0, 0.4);
     border-radius: 18px;
-    width: min(92vw, 360px);
+    width: min(92vw, 370px);
     max-height: 90vh;
     overflow-y: auto;
     padding: 16px 14px;
@@ -461,7 +465,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
-  .end-ranks-container { width: 100%; display: flex; flex-direction: column; gap: 5px; }
+  .end-ranks-container { width: 100%; display: flex; flex-direction: column; gap: 5px; max-height: 180px; overflow-y: auto; }
   .end-rank-row {
     display: flex;
     align-items: center;
@@ -477,7 +481,7 @@
   .end-rank-name { font-weight: 800; font-size: 0.8rem; color: #fff; }
 
   /* ------------------------------------------------------------- */
-  /* 3D ARENA & PERFECTLY SCALED LANDSCAPE PLAY MAT                */
+  /* 3D ARENA & 8-PLAYER SEATING MAT                               */
   /* ------------------------------------------------------------- */
   #viewport-3d {
     width: 100vw;
@@ -653,10 +657,8 @@
   }
 
   /* ------------------------------------------------------------- */
-  /* UNIFIED CORNER CONTROLS (MATCHING EXIT BUTTON AESTHETIC)       */
+  /* UNIFIED CORNER CONTROLS                                       */
   /* ------------------------------------------------------------- */
-  
-  /* TOP-RIGHT BAR: FULLSCREEN & EXIT */
   .top-right-bar {
     position: absolute;
     top: env(safe-area-inset-top, 10px);
@@ -679,19 +681,15 @@
     gap: 6px;
     outline: none;
     text-transform: uppercase;
-    transition: transform 0.15s ease, filter 0.15s ease;
+    transition: transform 0.15s ease;
   }
   .corner-pill-btn:active { transform: scale(0.95); }
-
-  /* Exit Button */
   .corner-pill-btn.exit-btn {
     background: linear-gradient(135deg, #ea2323 0%, #a80a1c 100%);
     border: 2px solid rgba(255, 255, 255, 0.6);
     color: #fff;
     box-shadow: 0 4px 16px rgba(234, 35, 35, 0.5);
   }
-
-  /* Fullscreen Button */
   .corner-pill-btn.fs-btn {
     background: linear-gradient(135deg, #101c36 0%, #090e1a 100%);
     border: 2px solid rgba(255, 255, 255, 0.4);
@@ -699,7 +697,7 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   }
 
-  /* TOP-LEFT: RANK LEADERBOARD PILL */
+  /* TOP-LEFT: RANK PILL */
   #leaderboard-widget {
     position: absolute;
     top: env(safe-area-inset-top, 10px);
@@ -734,7 +732,9 @@
     gap: 3px;
     border-top: 1px solid rgba(255,255,255,0.15);
     padding-top: 5px;
-    min-width: 140px;
+    min-width: 145px;
+    max-height: 180px;
+    overflow-y: auto;
   }
   #leaderboard-widget.expanded {
     z-index: 250;
@@ -802,7 +802,7 @@
   }
 
   /* ------------------------------------------------------------- */
-  /* RELATIVE PLAYER POSITIONS                                     */
+  /* 7 OPPONENT SPOTS AROUND TABLE (UP TO 8 PLAYERS)               */
   /* ------------------------------------------------------------- */
   .player-spot {
     position: absolute;
@@ -855,56 +855,59 @@
   }
   .card-count-badge.won-badge { background: #f7b300; color: #000; border-color: #fff; }
 
-  /* TOP OPPONENT */
-  #player-top { 
+  /* 7 DEDICATED PERIMETER OPPONENT SLOTS */
+  #spot-1 { /* Left Lower */
+    top: 60%; 
+    left: env(safe-area-inset-left, 12px); 
+    transform: translateY(-50%); 
+    align-items: flex-start; 
+  }
+  #spot-1 .player-nameplate { position: absolute; top: -15px; left: 0; max-width: 72px; overflow: hidden; text-overflow: ellipsis; }
+
+  #spot-2 { /* Left Upper */
+    top: 28%; 
+    left: env(safe-area-inset-left, 12px); 
+    transform: translateY(-50%); 
+    align-items: flex-start; 
+  }
+  #spot-2 .player-nameplate { position: absolute; top: -15px; left: 0; max-width: 72px; overflow: hidden; text-overflow: ellipsis; }
+
+  #spot-3 { /* Top Left */
+    top: env(safe-area-inset-top, 5px); 
+    left: 28%; 
+    transform: translateX(-50%); 
+  }
+  #spot-3 .player-box { flex-direction: row; gap: 5px; }
+
+  #spot-4 { /* Top Center */
     top: env(safe-area-inset-top, 5px); 
     left: 50%; 
     transform: translateX(-50%); 
   }
-  #player-top .player-box {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 6px;
-  }
-  #player-top .player-nameplate {
-    max-width: 80px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  #player-top .opponent-3d-hand { margin-top: 2px; }
+  #spot-4 .player-box { flex-direction: row; gap: 5px; }
 
-  /* LEFT OPPONENT */
-  #player-left { 
-    top: 48%; 
-    left: env(safe-area-inset-left, 12px); 
-    transform: translateY(-50%);
-    align-items: flex-start; 
+  #spot-5 { /* Top Right */
+    top: env(safe-area-inset-top, 5px); 
+    left: 72%; 
+    transform: translateX(-50%); 
   }
-  #player-left .player-nameplate {
-    position: absolute;
-    top: -16px;
-    left: 0;
-    max-width: 75px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  #spot-5 .player-box { flex-direction: row; gap: 5px; }
 
-  /* RIGHT OPPONENT */
-  #player-right { 
-    top: 48%; 
+  #spot-6 { /* Right Upper */
+    top: 28%; 
     right: env(safe-area-inset-right, 12px); 
-    transform: translateY(-50%);
+    transform: translateY(-50%); 
     align-items: flex-end; 
   }
-  #player-right .player-nameplate {
-    position: absolute;
-    top: -16px;
-    right: 0;
-    max-width: 75px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  #spot-6 .player-nameplate { position: absolute; top: -15px; right: 0; max-width: 72px; overflow: hidden; text-overflow: ellipsis; }
+
+  #spot-7 { /* Right Lower */
+    top: 60%; 
+    right: env(safe-area-inset-right, 12px); 
+    transform: translateY(-50%); 
+    align-items: flex-end; 
   }
+  #spot-7 .player-nameplate { position: absolute; top: -15px; right: 0; max-width: 72px; overflow: hidden; text-overflow: ellipsis; }
 
   /* HUMAN BOTTOM HAND */
   #player-bottom {
@@ -925,17 +928,15 @@
     pointer-events: none;
     margin-top: 2px;
   }
-  #opp-hand-left { transform: rotateY(25deg); }
-  #opp-hand-right { transform: rotateY(-25deg); }
   .opp-stand-card {
-    width: 26px;
-    height: 38px;
+    width: 24px;
+    height: 36px;
     border-radius: 5px;
     background: #fff;
     padding: 1.2px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.6);
     flex-shrink: 0;
-    margin-left: -14px;
+    margin-left: -13px;
   }
   .opp-stand-card:first-child { margin-left: 0 !important; }
 
@@ -1200,7 +1201,7 @@
   }
   #penalty-streak-box.show { transform: translate(-50%, -50%) scale(1); }
 
-  /* UNO BUTTON: BOTTOM-RIGHT */
+  /* UNO BUTTON */
   #uno-btn {
     position: absolute;
     right: env(safe-area-inset-right, 10px);
@@ -1416,22 +1417,26 @@
     </div>
   </div>
 
-  <!-- SOLO MATCH SETUP MODAL -->
+  <!-- SOLO MATCH SETUP MODAL (8 PLAYERS MAX) -->
   <div id="solo-setup-modal">
     <div class="solo-setup-card">
       <div style="text-align:center;">
         <div style="font-size: 1.15rem; font-weight: 900; color: #f7b300; display:flex; align-items:center; justify-content:center; gap:5px;">
           <span>🤖</span><span>PLAY VS BOTS</span>
         </div>
-        <p style="font-size: 0.68rem; color: #8fa0b5;">Select opponent count and AI difficulty</p>
+        <p style="font-size: 0.68rem; color: #8fa0b5;">Choose total players (2 to 8) and AI difficulty</p>
       </div>
 
       <div class="form-group">
-        <label>Opponents</label>
+        <label>Number of Opponents (2 - 8 Players)</label>
         <div class="bot-count-grid">
-          <button type="button" class="bot-count-btn" id="bot-count-btn-1" onclick="selectBotCount(1)">1 Bot (1v1)</button>
-          <button type="button" class="bot-count-btn" id="bot-count-btn-2" onclick="selectBotCount(2)">2 Bots (3P)</button>
-          <button type="button" class="bot-count-btn active" id="bot-count-btn-3" onclick="selectBotCount(3)">3 Bots (4P)</button>
+          <button type="button" class="bot-count-btn" id="bot-count-btn-1" onclick="selectBotCount(1)">1 (2P)</button>
+          <button type="button" class="bot-count-btn" id="bot-count-btn-2" onclick="selectBotCount(2)">2 (3P)</button>
+          <button type="button" class="bot-count-btn active" id="bot-count-btn-3" onclick="selectBotCount(3)">3 (4P)</button>
+          <button type="button" class="bot-count-btn" id="bot-count-btn-4" onclick="selectBotCount(4)">4 (5P)</button>
+          <button type="button" class="bot-count-btn" id="bot-count-btn-5" onclick="selectBotCount(5)">5 (6P)</button>
+          <button type="button" class="bot-count-btn" id="bot-count-btn-6" onclick="selectBotCount(6)">6 (7P)</button>
+          <button type="button" class="bot-count-btn" id="bot-count-btn-7" onclick="selectBotCount(7)">7 (8P)</button>
         </div>
       </div>
 
@@ -1457,7 +1462,7 @@
     </div>
   </div>
 
-  <!-- PRE-MATCH ROOM LOBBY -->
+  <!-- PRE-MATCH ROOM LOBBY (8 PLAYERS MAX) -->
   <div id="room-lobby-modal">
     <div class="room-lobby-card" style="text-align:center;">
       <div style="font-size: 1.15rem; font-weight: 900; color: #f7b300;">GAME ROOM LOBBY</div>
@@ -1477,12 +1482,12 @@
         Edition: <span id="lobby-edition-guest-text">UNO FLIP!</span>
       </div>
 
-      <div style="text-align:left; font-size:0.68rem; font-weight:800; color:#94a3b8;">PLAYERS (<span id="lobby-player-count">1</span>/4):</div>
+      <div style="text-align:left; font-size:0.68rem; font-weight:800; color:#94a3b8;">PLAYERS (<span id="lobby-player-count">1</span>/8):</div>
       <div class="lobby-players-list" id="lobby-players-list"></div>
 
       <div id="lobby-bot-option" style="display:none; align-items:center; justify-content:center; gap:6px; background:rgba(255,255,255,0.06); padding:5px; border-radius:6px;">
         <input type="checkbox" id="fill-bots-check" checked style="width:14px; height:14px; cursor:pointer; min-height:auto;">
-        <label for="fill-bots-check" style="cursor:pointer; font-size:0.68rem; color:#fff; text-transform:none;">Fill empty seats with AI Bots</label>
+        <label for="fill-bots-check" style="cursor:pointer; font-size:0.68rem; color:#fff; text-transform:none;">Fill empty seats with AI Bots (Up to 8)</label>
       </div>
 
       <div id="lobby-status-msg" style="font-size:0.68rem; color:#00ff73; font-weight:800;"></div>
@@ -1543,7 +1548,7 @@
 
       <div class="form-group" style="margin-top: 2px;">
         <label>Join Room Code</label>
-        <div style="display:flex; gap:6px;">
+        <div style="display:flex; gap:5px;">
           <input type="text" id="join-room-id" placeholder="Enter 6-Letter Code" style="text-transform:uppercase;">
           <button class="btn join-btn" id="join-btn-el" onclick="joinRoom()">Join</button>
         </div>
@@ -1555,7 +1560,7 @@
   <div id="viewport-3d">
     <div id="arena-bg"></div>
 
-    <!-- TOP-RIGHT BAR: FULLSCREEN & EXIT (MATCHING CAPSULES) -->
+    <!-- TOP-RIGHT BAR: FULLSCREEN & EXIT -->
     <div class="top-right-bar">
       <button class="corner-pill-btn fs-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
         <span id="game-fs-icon">⛶</span>
@@ -1565,7 +1570,7 @@
       </button>
     </div>
 
-    <!-- TOP-LEFT: RANK LEADERBOARD (MATCHING CAPSULE) -->
+    <!-- TOP-LEFT: RANK LEADERBOARD -->
     <div id="leaderboard-widget" onclick="toggleMobileLeaderboard(event)">
       <div class="lb-header">
         <div style="display:flex; align-items:center; gap:5px;">
@@ -1577,13 +1582,13 @@
       <div id="lb-list"></div>
     </div>
 
-    <!-- BOTTOM-LEFT: SORT BUTTON (MATCHING CAPSULE) -->
+    <!-- BOTTOM-LEFT: SORT BUTTON -->
     <button id="sort-hand-btn" class="corner-pill-btn" onclick="toggleHandSort()" title="Toggle card sorting">
       <span class="sort-indicator"></span>
       <span id="sort-btn-txt">SORT: OFF</span>
     </button>
 
-    <!-- BOTTOM-LEFT: PLAYER PROFILE BADGE (MATCHING CAPSULE) -->
+    <!-- BOTTOM-LEFT: PLAYER PROFILE BADGE -->
     <div id="player-bottom-card-info">
       <div class="player-portrait" id="p-portrait-0">⚡</div>
       <div class="player-nameplate" id="p-name-0">You</div>
@@ -1623,32 +1628,68 @@
       <div id="active-color-badge"><div class="color-badge-dot" id="badge-dot"></div><span id="badge-text">RED</span></div>
     </div>
 
-    <!-- Opponents: Well-spaced around the perimeter -->
-    <div class="player-spot" id="player-left">
+    <!-- 7 DEDICATED PERIMETER OPPONENT SLOTS (FOR UP TO 8 PLAYERS) -->
+    <div class="player-spot" id="spot-1">
       <div class="player-box">
-        <div class="player-portrait" id="p-portrait-left">🐭</div>
-        <div class="player-nameplate" id="p-name-left">Player</div>
-        <div class="card-count-badge" id="p-count-left">0</div>
+        <div class="player-portrait" id="p-portrait-1">🤖</div>
+        <div class="player-nameplate" id="p-name-1">Player 1</div>
+        <div class="card-count-badge" id="p-count-1">0</div>
       </div>
-      <div class="opponent-3d-hand" id="opp-hand-left"></div>
+      <div class="opponent-3d-hand" id="opp-hand-1"></div>
     </div>
 
-    <div class="player-spot" id="player-top">
+    <div class="player-spot" id="spot-2">
       <div class="player-box">
-        <div class="player-portrait" id="p-portrait-top">🐱</div>
-        <div class="player-nameplate" id="p-name-top">Player</div>
-        <div class="card-count-badge" id="p-count-top">0</div>
+        <div class="player-portrait" id="p-portrait-2">🤖</div>
+        <div class="player-nameplate" id="p-name-2">Player 2</div>
+        <div class="card-count-badge" id="p-count-2">0</div>
       </div>
-      <div class="opponent-3d-hand" id="opp-hand-top"></div>
+      <div class="opponent-3d-hand" id="opp-hand-2"></div>
     </div>
 
-    <div class="player-spot" id="player-right">
+    <div class="player-spot" id="spot-3">
       <div class="player-box">
-        <div class="player-portrait" id="p-portrait-right">🐶</div>
-        <div class="player-nameplate" id="p-name-right">Player</div>
-        <div class="card-count-badge" id="p-count-right">0</div>
+        <div class="player-portrait" id="p-portrait-3">🤖</div>
+        <div class="player-nameplate" id="p-name-3">Player 3</div>
+        <div class="card-count-badge" id="p-count-3">0</div>
       </div>
-      <div class="opponent-3d-hand" id="opp-hand-right"></div>
+      <div class="opponent-3d-hand" id="opp-hand-3"></div>
+    </div>
+
+    <div class="player-spot" id="spot-4">
+      <div class="player-box">
+        <div class="player-portrait" id="p-portrait-4">🤖</div>
+        <div class="player-nameplate" id="p-name-4">Player 4</div>
+        <div class="card-count-badge" id="p-count-4">0</div>
+      </div>
+      <div class="opponent-3d-hand" id="opp-hand-4"></div>
+    </div>
+
+    <div class="player-spot" id="spot-5">
+      <div class="player-box">
+        <div class="player-portrait" id="p-portrait-5">🤖</div>
+        <div class="player-nameplate" id="p-name-5">Player 5</div>
+        <div class="card-count-badge" id="p-count-5">0</div>
+      </div>
+      <div class="opponent-3d-hand" id="opp-hand-5"></div>
+    </div>
+
+    <div class="player-spot" id="spot-6">
+      <div class="player-box">
+        <div class="player-portrait" id="p-portrait-6">🤖</div>
+        <div class="player-nameplate" id="p-name-6">Player 6</div>
+        <div class="card-count-badge" id="p-count-6">0</div>
+      </div>
+      <div class="opponent-3d-hand" id="opp-hand-6"></div>
+    </div>
+
+    <div class="player-spot" id="spot-7">
+      <div class="player-box">
+        <div class="player-portrait" id="p-portrait-7">🤖</div>
+        <div class="player-nameplate" id="p-name-7">Player 7</div>
+        <div class="card-count-badge" id="p-count-7">0</div>
+      </div>
+      <div class="opponent-3d-hand" id="opp-hand-7"></div>
     </div>
 
     <!-- Human Player Hand Viewport -->
@@ -2203,7 +2244,7 @@ function initUserPeerNetwork() {
   }
 }
 
-/* BOT DIFFICULTY CONTROLLER */
+/* BOT DIFFICULTY & COUNT CONTROLLER */
 const DIFFICULTY_PRESETS = [
   { name: 'EASY', color: '#2ecc71', bg: 'rgba(46, 204, 113, 0.16)' },
   { name: 'STANDARD', color: '#0099ff', bg: 'rgba(0, 153, 255, 0.16)' },
@@ -2241,10 +2282,10 @@ function setDifficultySlider(val) {
 
 function selectBotCount(count) {
   selectedBotCount = count;
-  [1, 2, 3].forEach(n => {
+  for (let n = 1; n <= 7; n++) {
     const btn = document.getElementById(`bot-count-btn-${n}`);
     if (btn) btn.classList.toggle('active', n === count);
-  });
+  }
 }
 
 function openSoloSetupModal() {
@@ -2278,7 +2319,6 @@ function onHostChangeEdition(newEdition) {
   broadcastLobbyUpdate();
 }
 
-/* SMARTPHONE-AWARE CARD DIMENSIONS */
 function getCardDimensions() {
   const cardEl = document.querySelector('#draw-deck-3d') || document.querySelector('.card');
   if (cardEl) {
@@ -2288,6 +2328,25 @@ function getCardDimensions() {
   const w = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-w')) || 52;
   const h = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--card-h')) || 76;
   return { w, h, halfW: w / 2, halfH: h / 2 };
+}
+
+/* 8-PLAYER SEAT MAPPING CONFIGURATION */
+const SEAT_MAP = {
+  2: [4],
+  3: [2, 6],
+  4: [2, 4, 6],
+  5: [2, 3, 5, 6],
+  6: [1, 2, 4, 6, 7],
+  7: [1, 2, 3, 5, 6, 7],
+  8: [1, 2, 3, 4, 5, 6, 7]
+};
+
+function getSpotIndexForPlayer(targetPlayerId) {
+  const N = GameState.players.length;
+  if (targetPlayerId === GameState.myPlayerId) return 0;
+  const offset = (targetPlayerId - GameState.myPlayerId + N) % N;
+  const map = SEAT_MAP[N] || SEAT_MAP[8];
+  return map[offset - 1] || offset;
 }
 
 /* GAME ENGINE STATE */
@@ -2500,24 +2559,6 @@ function buildFallbackCard() {
   };
 }
 
-/* SMARTPHONE SEAT ALLOCATION */
-function getSpotForPlayer(targetPlayerId) {
-  const N = GameState.players.length;
-  if (targetPlayerId === GameState.myPlayerId) return 'bottom';
-  const offset = (targetPlayerId - GameState.myPlayerId + N) % N;
-  if (N === 2) {
-    if (offset === 1) return 'top';
-  } else if (N === 3) {
-    if (offset === 1) return 'left';
-    if (offset === 2) return 'right';
-  } else if (N === 4) {
-    if (offset === 1) return 'left';
-    if (offset === 2) return 'top';
-    if (offset === 3) return 'right';
-  }
-  return null;
-}
-
 function getCardThrowOrigin(playerId, cardIdx) {
   const { halfW, halfH } = getCardDimensions();
 
@@ -2546,8 +2587,8 @@ function getCardThrowOrigin(playerId, cardIdx) {
     return { x: window.innerWidth / 2 - halfW, y: window.innerHeight - 80 };
   }
 
-  const spotName = getSpotForPlayer(playerId);
-  const spotEl = spotName ? document.getElementById(`player-${spotName}`) : null;
+  const spotIdx = getSpotIndexForPlayer(playerId);
+  const spotEl = document.getElementById(`spot-${spotIdx}`);
   if (spotEl) {
     const r = spotEl.getBoundingClientRect();
     if (r.width > 0 && r.top > 0) {
@@ -2555,13 +2596,21 @@ function getCardThrowOrigin(playerId, cardIdx) {
     }
   }
 
-  if (spotName === 'top') return { x: window.innerWidth / 2 - halfW, y: 15 };
-  if (spotName === 'left') return { x: 20, y: window.innerHeight * 0.48 };
-  if (spotName === 'right') return { x: window.innerWidth - 65, y: window.innerHeight * 0.48 };
   return { x: window.innerWidth / 2 - halfW, y: 35 };
 }
 
-/* ROOM CREATION & JOINING */
+/* 8-PLAYER BOT ROSTER */
+const defaultBots = [
+  { name: 'Shorty', avatar: '🐭' },
+  { name: 'Archie', avatar: '🐱' },
+  { name: 'Ringo', avatar: '🐶' },
+  { name: 'Leo', avatar: '🦁' },
+  { name: 'Milo', avatar: '🦊' },
+  { name: 'Nova', avatar: '🐼' },
+  { name: 'Ziggy', avatar: '🐨' }
+];
+
+/* ROOM CREATION & JOINING (8 PLAYERS MAX) */
 function createRoom() {
   attemptAutoFullscreenAndOrientation();
   const name = CurrentUser.username || 'Host';
@@ -2598,8 +2647,8 @@ function createRoom() {
   });
 
   GameState.peer.on('connection', (conn) => {
-    if (GameState.players.length >= 4) {
-      conn.send({ type: 'ERROR', msg: 'Room is full' });
+    if (GameState.players.length >= 8) {
+      conn.send({ type: 'ERROR', msg: 'Room is full (Max 8 Players)' });
       return;
     }
 
@@ -2949,12 +2998,7 @@ function startHostedGame() {
   if (lobbyEdSelect) GameState.edition = lobbyEdSelect.value;
 
   if (fillBots) {
-    const defaultBots = [
-      { name: 'Shorty', avatar: '🐭' },
-      { name: 'Archie', avatar: '🐱' },
-      { name: 'Ringo', avatar: '🐶' }
-    ];
-    for (let i = GameState.players.length; i < 4; i++) {
+    for (let i = GameState.players.length; i < 8; i++) {
       const b = defaultBots[i-1] || { name: `Bot ${i}`, avatar: '🤖' };
       GameState.players.push({ id: i, name: b.name, avatar: b.avatar, hand: [], isBot: true, conn: null, hasWon: false });
     }
@@ -2980,12 +3024,6 @@ function startSoloGameWithParams(botCount, difficulty) {
   GameState.isHost = true;
   GameState.myPlayerId = 0;
   GameState.botDifficulty = difficulty;
-
-  const defaultBots = [
-    { name: 'Shorty', avatar: '🐭' },
-    { name: 'Archie', avatar: '🐱' },
-    { name: 'Ringo', avatar: '🐶' }
-  ];
 
   GameState.players = [
     { id: 0, name: `${CurrentUser.username} (You)`, avatar: CurrentUser.avatar, hand: [], isBot: false, hasWon: false }
@@ -3075,10 +3113,12 @@ function closeMatchEndAndReturnToLobby() {
   const handBox = document.getElementById('player-hand');
   if (handBox) handBox.innerHTML = '';
   
-  ['left', 'top', 'right'].forEach(s => {
+  for (let s = 1; s <= 7; s++) {
     const oppHand = document.getElementById(`opp-hand-${s}`);
     if (oppHand) oppHand.innerHTML = '';
-  });
+    const box = document.getElementById(`spot-${s}`);
+    if (box) box.style.display = 'none';
+  }
 
   const discardBox = document.getElementById('discard-pile-3d');
   if (discardBox) {
@@ -3120,10 +3160,12 @@ function returnToRoomLobbyAfterMatch() {
   const handBox = document.getElementById('player-hand');
   if (handBox) handBox.innerHTML = '';
 
-  ['left', 'top', 'right'].forEach(s => {
+  for (let s = 1; s <= 7; s++) {
     const oppHand = document.getElementById(`opp-hand-${s}`);
     if (oppHand) oppHand.innerHTML = '';
-  });
+    const box = document.getElementById(`spot-${s}`);
+    if (box) box.style.display = 'none';
+  }
 
   const discardBox = document.getElementById('discard-pile-3d');
   if (discardBox) {
@@ -3191,7 +3233,7 @@ function showMatchOverScreen(rankings) {
     subtitle.textContent = myRankObj ? `You finished #${myRankObj.rank}` : 'Game Complete';
   }
 
-  const medals = ['🥇', '🥈', '🥉', '4th'];
+  const medals = ['🥇', '🥈', '🥉', '4th', '5th', '6th', '7th', '8th'];
 
   rankings.forEach(r => {
     const row = document.createElement('div');
@@ -3448,7 +3490,7 @@ function updateTheme() {
   }
 }
 
-/* SMARTPHONE GAME MAT RENDERING */
+/* SMARTPHONE GAME MAT RENDERING (8-PLAYER OPTIMIZED) */
 function renderGame() {
   const dirEl = document.getElementById('dir-ring');
   if (dirEl) dirEl.className = GameState.direction === -1 ? 'direction-ring-3d reverse' : 'direction-ring-3d';
@@ -3583,22 +3625,22 @@ function renderGame() {
     }
   }
 
-  ['left', 'top', 'right'].forEach(s => {
-    const box = document.getElementById(`player-${s}`);
+  /* HIDE ALL 7 SLOTS BEFORE RENDERING */
+  for (let s = 1; s <= 7; s++) {
+    const box = document.getElementById(`spot-${s}`);
     if (box) box.style.display = 'none';
-  });
+  }
 
+  /* RENDER EACH ACTIVE OPPONENT IN THEIR ASSIGNED SPOT */
   GameState.players.forEach(p => {
     if (p.id === GameState.myPlayerId) return;
 
-    const spotName = getSpotForPlayer(p.id);
-    if (!spotName || spotName === 'bottom') return;
-
-    const box = document.getElementById(`player-${spotName}`);
-    const portrait = document.getElementById(`p-portrait-${spotName}`);
-    const countEl = document.getElementById(`p-count-${spotName}`);
-    const nameEl = document.getElementById(`p-name-${spotName}`);
-    const handEl = document.getElementById(`opp-hand-${spotName}`);
+    const spotIdx = getSpotIndexForPlayer(p.id);
+    const box = document.getElementById(`spot-${spotIdx}`);
+    const portrait = document.getElementById(`p-portrait-${spotIdx}`);
+    const countEl = document.getElementById(`p-count-${spotIdx}`);
+    const nameEl = document.getElementById(`p-name-${spotIdx}`);
+    const handEl = document.getElementById(`opp-hand-${spotIdx}`);
 
     if (box) {
       box.style.display = 'flex';
@@ -3625,7 +3667,7 @@ function renderGame() {
           const displayCards = Math.min(count, 5);
           const oppHand = (p.hand && Array.isArray(p.hand)) ? p.hand : [];
           const oppOppositeFaces = p.oppositeFaces || [];
-          const oppStep = displayCards > 1 ? Math.min(14, 70 / (displayCards - 1)) : 0;
+          const oppStep = displayCards > 1 ? Math.min(13, 65 / (displayCards - 1)) : 0;
 
           for (let i = 0; i < displayCards; i++) {
             let standCard;
@@ -3645,7 +3687,7 @@ function renderGame() {
               standCard.className = 'opp-stand-card';
               standCard.innerHTML = `<div class="card-back-design"><div class="card-back-oval"><div class="card-back-logo" style="font-size:0.55rem;">UNO</div></div></div>`;
             }
-            if (i > 0) standCard.style.marginLeft = `-${14 - oppStep}px`;
+            if (i > 0) standCard.style.marginLeft = `-${13 - oppStep}px`;
             handEl.appendChild(standCard);
           }
         }
@@ -3671,7 +3713,7 @@ function renderLeaderboard() {
     return getHandCount(a) - getHandCount(b);
   });
 
-  const medals = ['🥇', '🥈', '🥉', '4th'];
+  const medals = ['🥇', '🥈', '🥉', '4th', '5th', '6th', '7th', '8th'];
 
   sorted.forEach((p, idx) => {
     const row = document.createElement('div');
@@ -3784,7 +3826,7 @@ function runDealVisualAnimation(onComplete) {
 
   const totalCards = 7 * GameState.players.length;
   let cardCount = 0;
-  const dealInterval = 38;
+  const dealInterval = Math.max(22, Math.floor(260 / GameState.players.length));
 
   activeDealIntervalTimer = setInterval(() => {
     if (!GameState.inGame) {
