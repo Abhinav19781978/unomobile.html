@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="screen-orientation" content="landscape">
+<meta name="orientation" content="landscape">
 <title>UNO: 3D Edition</title>
 <!-- PeerJS & Fonts -->
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -75,10 +77,22 @@
     padding: 24px;
     text-align: center;
   }
+  /* Silent automatic landscape fallback. The old rotate prompt remains disabled. */
+  #rotate-device-prompt { display: none !important; }
   @media (orientation: portrait) {
-    #rotate-device-prompt {
-      display: flex !important;
+    #viewport-3d, #auth-screen, #lobby-screen {
+      width: 100vh !important;
+      height: 100vw !important;
+      min-width: 100vh !important;
+      min-height: 100vw !important;
+      left: 50%;
+      top: 50%;
+      right: auto;
+      bottom: auto;
+      transform: translate(-50%, -50%) rotate(90deg) !important;
+      transform-origin: center center;
     }
+    #viewport-3d { overflow: hidden; }
   }
   .rotate-icon {
     font-size: 3.5rem;
@@ -163,22 +177,43 @@
     box-shadow: 0 -15px 70px rgba(0, 210, 200, 0.25), inset 0 0 100px rgba(0,0,0,0.9);
   }
 
-  /* HOME PROFILE BANNER */
+  /* EXPANDABLE / COMPRESSIBLE PROFILE BANNER (PC-STYLE) */
   .home-profile-banner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: min(92vw, 480px);
-    background: rgba(14, 21, 37, 0.92) !important;
+    width: auto;
+    min-width: 175px;
+    max-width: 220px;
+    background: rgba(14, 21, 37, 0.94) !important;
     backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(255, 255, 255, 0.18);
-    border-radius: 16px;
-    padding: 6px 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 25px;
+    padding: 7px 14px;
     margin-bottom: 8px;
     z-index: 20;
-    box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+    transition: max-width 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                width 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                padding 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+    overflow: hidden;
   }
-  .user-badge-left { display: flex; align-items: center; gap: 8px; }
+  .home-profile-banner.expanded {
+    max-width: min(94vw, 520px);
+    width: min(94vw, 520px);
+    padding: 8px 14px;
+    border-color: rgba(247, 179, 0, 0.65);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(247, 179, 0, 0.25);
+  }
+  .user-badge-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
   .user-avatar-tag {
     font-size: 1.4rem;
     background: rgba(255,255,255,0.08);
@@ -190,30 +225,31 @@
     justify-content: center;
     border: 2px solid #f7b300;
     cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
   }
+  .user-avatar-tag:hover { transform: scale(1.08); box-shadow: 0 0 12px rgba(247, 179, 0, 0.7); }
   .user-text-info { display: flex; flex-direction: column; }
   .user-username { font-weight: 900; font-size: 0.85rem; color: #fff; }
   .user-wins-stat { font-size: 0.65rem; font-weight: 800; color: #f7b300; }
 
-  .pill-btn {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.25);
-    color: #fff;
-    padding: 5px 12px;
-    border-radius: 14px;
-    font-size: 0.72rem;
-    font-weight: 800;
-    cursor: pointer;
-    display: inline-flex;
+  /* SLIDE-OUT PROFILE ACTIONS */
+  .profile-banner-actions {
+    display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
   }
-  .pill-btn.fs-highlight {
-    background: linear-gradient(135deg, rgba(0, 153, 255, 0.35), rgba(0, 91, 181, 0.35));
-    border-color: #0099ff;
-    color: #38bdf8;
+  .home-profile-banner.expanded .profile-banner-actions {
+    max-width: 430px;
+    opacity: 1;
+    pointer-events: auto;
+    margin-left: 8px;
   }
-  .pill-btn.danger { background: rgba(234, 35, 35, 0.35) !important; border-color: rgba(234, 35, 35, 0.6) !important; }
 
   .title-logo-container {
     position: relative;
@@ -602,6 +638,29 @@
     100% { transform: scale(1) rotateY(360deg); }
   }
 
+  /* IN-GAME TOP-RIGHT MUTE TOGGLE */
+  #sound-toggle-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(14, 21, 37, 0.92);
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    font-size: 1.15rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    outline: none;
+  }
+  #sound-toggle-btn:hover { transform: scale(1.1); border-color: #f7b300; }
+
   #flash-overlay {
     position: absolute;
     inset: 0;
@@ -638,9 +697,9 @@
     left: 50%;
     transform: translate(-50%, -50%) rotateX(28deg);
     transform-style: preserve-3d;
-    width: min(88vw, 720px);
-    height: min(26vh, 125px);
-    border-radius: 100px;
+    width: min(66vw, 440px);
+    height: min(54vh, 245px);
+    border-radius: 150px;
     background: radial-gradient(ellipse at center, #ff7a00 0%, #e63200 45%, #8f1000 80%, #450300 100%);
     box-shadow: 0 0 30px rgba(255, 90, 0, 0.35), inset 0 0 35px rgba(0,0,0,0.85);
     border: 7px solid #1a0505;
@@ -1404,8 +1463,11 @@
 </head>
 <body>
 
+  <!-- IN-GAME TOP-RIGHT MUTE TOGGLE -->
+  <button id="sound-toggle-btn" onclick="toggleAudioMute()" title="Mute/Unmute Audio">🔊</button>
+
   <!-- PORTRAIT ROTATION WARNING OVERLAY -->
-  <div id="rotate-device-prompt" onclick="attemptAutoFullscreenAndOrientation()">
+  <div id="rotate-device-prompt" aria-hidden="true">
     <div class="rotate-icon">📱⟳</div>
     <div class="rotate-text">PLEASE ROTATE YOUR DEVICE</div>
     <p style="font-size: 0.8rem; color: #8fa0b5; max-width: 280px;">UNO 3D is designed for landscape mode. Tap anywhere to lock fullscreen!</p>
@@ -1716,20 +1778,21 @@
       <div class="parlor-table-deck"></div>
     </div>
 
-    <!-- User Header with Direct Fullscreen Button -->
-    <div class="home-profile-banner">
-      <div class="user-badge-left">
-        <div class="user-avatar-tag" id="bar-user-avatar" onclick="openEmojiPickerModal()">⚡</div>
+    <!-- EXPANDABLE TOP PROFILE BAR -->
+    <div class="home-profile-banner" id="home-profile-banner">
+      <div class="user-badge-left" onclick="toggleProfileBanner()" title="Click to view profile options">
+        <div class="user-avatar-tag" id="bar-user-avatar">⚡</div>
         <div class="user-text-info">
           <span class="user-username" id="bar-user-name">Player</span>
           <span class="user-wins-stat" id="bar-user-wins">Wins: 0</span>
         </div>
       </div>
-      <div style="display:flex; gap:6px; align-items:center;">
+      <div class="profile-banner-actions">
         <button class="pill-btn fs-highlight" id="home-fs-btn" onclick="toggleFullscreen()">
           <span>⛶</span><span>FULLSCREEN</span>
         </button>
-        <button class="pill-btn" onclick="openEmojiPickerModal()" style="background:rgba(247,179,0,0.18); border-color:#f7b300; color:#ffd700;">AVATAR</button>
+        <button class="pill-btn" onclick="openEmojiPickerModal()" style="background:rgba(247,179,0,0.18); border-color:#f7b300; color:#ffd700;">CHANGE EMOJI</button>
+        <button class="pill-btn" id="banner-mute-btn" onclick="toggleAudioMute()">🔊 SOUND: ON</button>
         <button class="pill-btn danger" onclick="logoutUser()">LOGOUT</button>
       </div>
     </div>
@@ -1942,6 +2005,43 @@
 /**
  * AUDIO ENGINE
  */
+let isAudioMuted = localStorage.getItem('uno_muted') === 'true';
+
+function updateMuteButtonUI() {
+  const btn = document.getElementById('sound-toggle-btn');
+  const bannerMuteBtn = document.getElementById('banner-mute-btn');
+  if (btn) {
+    btn.textContent = isAudioMuted ? '🔇' : '🔊';
+    btn.title = isAudioMuted ? 'Unmute Audio' : 'Mute Audio';
+  }
+  if (bannerMuteBtn) {
+    bannerMuteBtn.textContent = isAudioMuted ? '🔇 SOUND: OFF' : '🔊 SOUND: ON';
+    if (isAudioMuted) {
+      bannerMuteBtn.style.background = 'rgba(234, 35, 35, 0.35)';
+      bannerMuteBtn.style.borderColor = 'rgba(234, 35, 35, 0.6)';
+    } else {
+      bannerMuteBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+      bannerMuteBtn.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+    }
+  }
+}
+
+function toggleAudioMute() {
+  isAudioMuted = !isAudioMuted;
+  localStorage.setItem('uno_muted', isAudioMuted);
+  updateMuteButtonUI();
+}
+
+/**
+ * TOGGLE PROFILE BANNER (EXPAND / COMPRESS)
+ */
+function toggleProfileBanner() {
+  const banner = document.getElementById('home-profile-banner');
+  if (banner) {
+    banner.classList.toggle('expanded');
+  }
+}
+
 const AudioEngine = {
   ctx: null,
   init() {
@@ -1954,6 +2054,7 @@ const AudioEngine = {
     }
   },
   cardThrow() {
+    if (isAudioMuted) return;
     this.init();
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
@@ -1967,6 +2068,7 @@ const AudioEngine = {
     osc.start(); osc.stop(this.ctx.currentTime + 0.14);
   },
   cardPickup() {
+    if (isAudioMuted) return;
     this.init();
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
@@ -1980,6 +2082,7 @@ const AudioEngine = {
     osc.start(); osc.stop(this.ctx.currentTime + 0.11);
   },
   flipTransition() {
+    if (isAudioMuted) return;
     this.init();
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
@@ -1993,6 +2096,7 @@ const AudioEngine = {
     osc.start(); osc.stop(this.ctx.currentTime + 0.6);
   },
   vfxBoom() {
+    if (isAudioMuted) return;
     this.init();
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
@@ -2006,6 +2110,7 @@ const AudioEngine = {
     osc.start(); osc.stop(this.ctx.currentTime + 0.35);
   },
   penaltyZap() {
+    if (isAudioMuted) return;
     this.init();
     if (!this.ctx) return;
     [200, 350, 500, 750].forEach((f, i) => {
@@ -2021,6 +2126,7 @@ const AudioEngine = {
     });
   },
   uno() {
+    if (isAudioMuted) return;
     this.init();
     if (!this.ctx) return;
     [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
@@ -2036,6 +2142,7 @@ const AudioEngine = {
     });
   },
   fanfare() {
+    if (isAudioMuted) return;
     this.init();
     if (!this.ctx) return;
     [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach((freq, idx) => {
@@ -2051,23 +2158,31 @@ const AudioEngine = {
     });
   }
 };
+document.addEventListener('pointerdown', () => AudioEngine.init(), { passive: true });
 
 /**
  * AUTOMATIC FULLSCREEN & LANDSCAPE LOCK
  */
 async function attemptAutoFullscreenAndOrientation() {
-  AudioEngine.init();
+  autoOrientationAttempted = true;
+  const doc = document;
+  const docEl = doc.documentElement;
+  const isFullscreen = !!(doc.fullscreenElement || doc.webkitFullscreenElement);
+  const requestFullscreen = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
+
+  // Browsers generally allow orientation lock only from fullscreen/user activation.
+  // Try silently on launch, then retry from visibility/pointer events below.
   try {
-    const doc = window.document;
-    const docEl = doc.documentElement;
-    if (!doc.fullscreenElement && !doc.webkitFullscreenElement) {
-      const rfs = docEl.requestFullscreen || docEl.webkitRequestFullscreen || docEl.mozRequestFullScreen || docEl.msRequestFullscreen;
-      if (rfs) await rfs.call(docEl);
-    }
-    if (screen.orientation && screen.orientation.lock) {
+    if (!isFullscreen && requestFullscreen) await requestFullscreen.call(docEl);
+  } catch (e) {}
+
+  try {
+    if (screen.orientation && typeof screen.orientation.lock === 'function') {
       await screen.orientation.lock('landscape');
     }
-  } catch (err) {}
+  } catch (e) {}
+
+  updateFullscreenUI();
 }
 
 function toggleFullscreen() {
@@ -2278,6 +2393,7 @@ function updateUserUI() {
   document.getElementById('bar-user-wins').textContent = `Wins: ${CurrentUser.wins || 0}`;
   document.getElementById('friends-count-num').textContent = CurrentUser.friends ? CurrentUser.friends.length : 0;
   document.getElementById('bar-user-avatar').textContent = CurrentUser.avatar || '⚡';
+  updateMuteButtonUI();
 }
 
 function showScreen(screen) {
@@ -2285,10 +2401,14 @@ function showScreen(screen) {
   document.getElementById('lobby-screen').style.display = (screen === 'lobby') ? 'flex' : 'none';
   document.getElementById('viewport-3d').style.display = (screen === 'game') ? 'flex' : 'none';
 
+  const inGameSoundBtn = document.getElementById('sound-toggle-btn');
+  if (inGameSoundBtn) inGameSoundBtn.style.display = (screen === 'game') ? 'flex' : 'none';
+
   if (screen === 'lobby') {
     updateUserUI();
     updateFullscreenUI();
   }
+  updateMuteButtonUI();
 }
 
 /* FRIENDS LIST SYSTEM */
@@ -2481,11 +2601,14 @@ function initUserPeerNetwork() {
     GameState.presencePeer.on('connection', (conn) => {
       conn.on('data', (data) => {
         if (data.type === 'PRESENCE_PING') {
-          conn.send({ type: 'PRESENCE_PONG', avatar: CurrentUser.avatar });
+          try { conn.send({ type: 'PRESENCE_PONG', avatar: CurrentUser.avatar }); } catch (e) {}
         } else if (data.type === 'DIRECT_INVITE') {
           receiveInvite(data);
         }
       });
+    });
+    GameState.presencePeer.on('disconnected', () => {
+      try { GameState.presencePeer.reconnect(); } catch (e) {}
     });
   } catch (e) {
     console.warn("Presence network init error:", e);
@@ -2750,6 +2873,233 @@ let GameState = {
 let activeDealIntervalTimer = null;
 let activeBotTurnTimeout = null;
 
+/* ROOM CONNECTION RESILIENCE */
+let roomReconnectTimer = null;
+let roomReconnectAttempts = 0;
+let roomHeartbeatTimer = null;
+let roomJoinTimeoutTimer = null;
+let roomLastHeartbeatAt = 0;
+let roomReconnectInProgress = false;
+let intentionalRoomDisconnect = false;
+let roomConnectionGeneration = 0;
+let autoOrientationAttempted = false;
+let animationRunToken = 0;
+let pendingNetworkAnimations = [];
+
+function queueOrRunNetworkAnimation(data) {
+  if (!data) return;
+  if (!GameState.inGame) {
+    pendingNetworkAnimations.push(data);
+    if (pendingNetworkAnimations.length > 16) pendingNetworkAnimations.shift();
+    return;
+  }
+  runNetworkAnimation(data);
+}
+
+function runNetworkAnimation(data) {
+  if (!data || !GameState.inGame) return;
+  if (data.type === 'RUN_DEAL_ANIM') runDealVisualAnimation(() => {});
+  else if (data.type === 'ANIM_CARD_THROW') {
+    const origin = getCardThrowOrigin(data.playerId, data.cardIndex);
+    animateCardThrow(origin, data.card, data.chosenColor, () => {});
+  } else if (data.type === 'ANIM_CARD_PICKUP') {
+    animateCardPickup(data.playerId, data.count, () => {});
+  } else if (data.type === 'VFX') {
+    triggerCenterSpecialVFX(data.vfxType, data.text);
+  }
+}
+
+function flushPendingNetworkAnimations() {
+  if (!GameState.inGame || !pendingNetworkAnimations.length) return;
+  const queued = pendingNetworkAnimations.splice(0, pendingNetworkAnimations.length);
+  queued.forEach((data, index) => {
+    setTimeout(() => {
+      if (GameState.inGame) runNetworkAnimation(data);
+    }, index * 45);
+  });
+}
+
+function clearRoomNetworkTimers() {
+  if (roomReconnectTimer) { clearTimeout(roomReconnectTimer); roomReconnectTimer = null; }
+  if (roomHeartbeatTimer) { clearInterval(roomHeartbeatTimer); roomHeartbeatTimer = null; }
+  if (roomJoinTimeoutTimer) { clearTimeout(roomJoinTimeoutTimer); roomJoinTimeoutTimer = null; }
+}
+
+function stopRoomHeartbeat() {
+  if (roomHeartbeatTimer) { clearInterval(roomHeartbeatTimer); roomHeartbeatTimer = null; }
+}
+
+function startGuestRoomHeartbeat(conn) {
+  stopRoomHeartbeat();
+  if (!conn) return;
+  roomLastHeartbeatAt = Date.now();
+  roomHeartbeatTimer = setInterval(() => {
+    if (intentionalRoomDisconnect || !conn || GameState.guestHostConn !== conn) return;
+    if (document.hidden) return;
+    if (!conn.open) {
+      stopRoomHeartbeat();
+      scheduleGuestRoomReconnect('connection closed');
+      return;
+    }
+    try {
+      conn.send({ type: 'ROOM_HEARTBEAT', ts: Date.now(), playerId: GameState.myPlayerId });
+    } catch (e) {
+      stopRoomHeartbeat();
+      scheduleGuestRoomReconnect('heartbeat send failed');
+      return;
+    }
+    if (Date.now() - roomLastHeartbeatAt > 30000) {
+      try { conn.close(); } catch (e) {}
+    }
+  }, 6000);
+}
+
+function scheduleGuestRoomReconnect(reason = '') {
+  if (intentionalRoomDisconnect || GameState.isHost || !GameState.hostingRoomCode) return;
+  if (roomReconnectTimer || roomReconnectInProgress) return;
+
+  roomReconnectAttempts += 1;
+  const delay = Math.min(15000, 800 * Math.pow(1.6, Math.min(10, roomReconnectAttempts - 1)));
+  const status = document.getElementById('lobby-status-msg');
+  if (status) {
+    status.style.color = '#f7b300';
+    status.textContent = GameState.inGame ? 'Connection lost — reconnecting…' : 'Connection lost — reconnecting…';
+  }
+
+  roomReconnectTimer = setTimeout(() => {
+    roomReconnectTimer = null;
+    reconnectGuestToRoom();
+  }, delay);
+}
+
+function sendGuestRoomMessage(payload) {
+  const conn = GameState.guestHostConn;
+  if (!conn || !conn.open || intentionalRoomDisconnect) {
+    scheduleGuestRoomReconnect('room action while disconnected');
+    return false;
+  }
+  try {
+    conn.send(payload);
+    return true;
+  } catch (e) {
+    try { conn.close(); } catch (ignored) {}
+    scheduleGuestRoomReconnect('room action send failed');
+    return false;
+  }
+}
+
+function sendGuestJoinOrReconnect(conn, cleanCode, name, isReconnect) {
+  const payload = isReconnect
+    ? { type: 'RECONNECT_REQ', playerId: GameState.myPlayerId, clientKey: sanitizeUsername(CurrentUser.username), name, avatar: CurrentUser.avatar || '⚡' }
+    : { type: 'JOIN_REQ', name, avatar: CurrentUser.avatar || '⚡', clientKey: sanitizeUsername(CurrentUser.username) };
+  try {
+    conn.send(payload);
+    return true;
+  } catch (e) {
+    scheduleGuestRoomReconnect('join send failed');
+    return false;
+  }
+}
+
+function attachGuestRoomConnection(conn, cleanCode, name, isReconnect = false, generation = roomConnectionGeneration) {
+  GameState.guestHostConn = conn;
+  let opened = false;
+
+  if (roomJoinTimeoutTimer) clearTimeout(roomJoinTimeoutTimer);
+  roomJoinTimeoutTimer = setTimeout(() => {
+    roomJoinTimeoutTimer = null;
+    if (generation !== roomConnectionGeneration || opened || intentionalRoomDisconnect) return;
+    try { conn.close(); } catch (e) {}
+    roomReconnectInProgress = false;
+    scheduleGuestRoomReconnect('host connection timeout');
+  }, 12000);
+
+  conn.on('open', () => {
+    if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+    opened = true;
+    if (roomJoinTimeoutTimer) { clearTimeout(roomJoinTimeoutTimer); roomJoinTimeoutTimer = null; }
+    roomReconnectInProgress = false;
+    roomReconnectAttempts = 0;
+    if (roomReconnectTimer) { clearTimeout(roomReconnectTimer); roomReconnectTimer = null; }
+    const joinBtn = document.getElementById('join-btn-el');
+    if (joinBtn) joinBtn.textContent = 'Join';
+    startGuestRoomHeartbeat(conn);
+    sendGuestJoinOrReconnect(conn, cleanCode, name, isReconnect);
+    const status = document.getElementById('lobby-status-msg');
+    if (status) status.textContent = '';
+  });
+
+  conn.on('data', (data) => {
+    if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+    if (data && data.type === 'ROOM_HEARTBEAT_ACK') {
+      roomLastHeartbeatAt = Date.now();
+      return;
+    }
+    handleGuestData(conn, data);
+  });
+
+  conn.on('error', () => {
+    if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+    stopRoomHeartbeat();
+    try { conn.close(); } catch (e) {}
+    scheduleGuestRoomReconnect('connection error');
+  });
+
+  conn.on('close', () => {
+    if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+    stopRoomHeartbeat();
+    if (roomJoinTimeoutTimer) { clearTimeout(roomJoinTimeoutTimer); roomJoinTimeoutTimer = null; }
+    if (GameState.guestHostConn === conn) GameState.guestHostConn = null;
+    roomReconnectInProgress = false;
+    scheduleGuestRoomReconnect('connection closed');
+  });
+}
+
+function reconnectGuestToRoom() {
+  if (intentionalRoomDisconnect || GameState.isHost || !GameState.hostingRoomCode) return;
+  if (roomReconnectInProgress) return;
+  roomReconnectInProgress = true;
+
+  const generation = ++roomConnectionGeneration;
+  const cleanCode = GameState.hostingRoomCode;
+  const name = CurrentUser.username || 'Guest';
+  const oldPeer = GameState.peer;
+  GameState.guestHostConn = null;
+  stopRoomHeartbeat();
+  if (oldPeer) { try { oldPeer.destroy(); } catch (e) {} }
+  GameState.peer = null;
+
+  try {
+    const peer = new Peer(PEER_CONFIG);
+    GameState.peer = peer;
+    peer.on('open', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      const conn = peer.connect(`uno_match_${cleanCode}`, { reliable: true, serialization: 'json' });
+      attachGuestRoomConnection(conn, cleanCode, name, true, generation);
+    });
+    peer.on('disconnected', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      try { peer.reconnect(); } catch (e) {}
+      roomReconnectInProgress = false;
+      scheduleGuestRoomReconnect('peer disconnected');
+    });
+    peer.on('close', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      roomReconnectInProgress = false;
+      scheduleGuestRoomReconnect('peer closed');
+    });
+    peer.on('error', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      roomReconnectInProgress = false;
+      scheduleGuestRoomReconnect('peer error');
+    });
+  } catch (e) {
+    if (generation !== roomConnectionGeneration) return;
+    roomReconnectInProgress = false;
+    scheduleGuestRoomReconnect('peer creation failed');
+  }
+}
+
 const COLOR_HEX = {
   red: '#ea2323',
   blue: '#0076e6',
@@ -2874,6 +3224,9 @@ const defaultBots = [
 /* ROOM CREATION & JOINING (8 PLAYERS MAX) */
 function createRoom() {
   attemptAutoFullscreenAndOrientation();
+  intentionalRoomDisconnect = false;
+  roomConnectionGeneration++;
+  clearRoomNetworkTimers();
   const name = CurrentUser.username || 'Host';
   const code = generateReadableRoomCode();
   GameState.edition = document.getElementById('game-edition').value;
@@ -2897,6 +3250,7 @@ function createRoom() {
     GameState.players = [{
       id: 0,
       name: `${name} (Host)`,
+      clientKey: sanitizeUsername(CurrentUser.username),
       avatar: CurrentUser.avatar || '⚡',
       hand: [],
       isBot: false,
@@ -2908,36 +3262,66 @@ function createRoom() {
   });
 
   GameState.peer.on('connection', (conn) => {
-    if (GameState.players.length >= 8) {
-      conn.send({ type: 'ERROR', msg: 'Room is full (Max 8 Players)' });
-      return;
-    }
+    const attachHostConnection = () => {
+      conn.on('data', (data) => {
+        if (data && data.type === 'ROOM_HEARTBEAT') {
+          try { conn.send({ type: 'ROOM_HEARTBEAT_ACK', ts: data.ts || Date.now() }); } catch (e) {}
+          return;
+        }
+        handleHostData(conn, data);
+      });
 
-    conn.on('data', (data) => handleHostData(conn, data));
-
-    conn.on('close', () => {
-      if (!GameState.inGame) {
-        GameState.players = GameState.players.filter(p => p.conn !== conn);
-        broadcastLobbyUpdate();
-        updateLobbyPlayerListUI();
-      } else {
+      conn.on('close', () => {
         const dc = GameState.players.find(p => p.conn === conn);
-        if (dc) {
+        if (!dc) return;
+        if (!GameState.inGame) {
+          GameState.players = GameState.players.filter(p => p.conn !== conn);
+          broadcastLobbyUpdate();
+          updateLobbyPlayerListUI();
+        } else {
           dc.isBot = true;
-          dc.name += ' (AI)';
+          if (!String(dc.name).endsWith(' (AI)')) dc.name += ' (AI)';
           dc.conn = null;
           broadcastState();
           if (GameState.turnIndex === dc.id) {
+            if (activeBotTurnTimeout) clearTimeout(activeBotTurnTimeout);
             activeBotTurnTimeout = setTimeout(botTurn, 1000);
           }
         }
-      }
-    });
+      });
+    };
+
+    if (!GameState.inGame && GameState.players.length >= 8) {
+      try { conn.send({ type: 'ERROR', msg: 'Room is full (Max 8 Players)' }); } catch (e) {}
+      return;
+    }
+    attachHostConnection();
+  });
+
+  GameState.peer.on('disconnected', () => {
+    if (intentionalRoomDisconnect) return;
+    try { GameState.peer.reconnect(); } catch (e) {}
+  });
+
+  GameState.peer.on('close', () => {
+    if (intentionalRoomDisconnect) return;
+    const status = document.getElementById('lobby-status-msg');
+    if (status && GameState.hostingRoomCode) {
+      status.style.color = '#ff5252';
+      status.textContent = 'Room connection closed. Reconnecting…';
+    }
   });
 
   GameState.peer.on('error', (err) => {
     btn.textContent = "Create Room";
-    alert("Network error: " + err.message);
+    if (!intentionalRoomDisconnect) {
+      const status = document.getElementById('lobby-status-msg');
+      if (status) {
+        status.style.color = '#ff5252';
+        status.textContent = 'Room network error — retrying connection…';
+      }
+      try { GameState.peer.reconnect(); } catch (e) {}
+    }
   });
 }
 
@@ -2950,61 +3334,124 @@ function joinRoom() {
 
 function joinRoomWithCode(roomCode) {
   attemptAutoFullscreenAndOrientation();
+  intentionalRoomDisconnect = false;
+  roomReconnectAttempts = 0;
+  roomReconnectInProgress = false;
+  clearRoomNetworkTimers();
+  roomConnectionGeneration++;
+
   const name = CurrentUser.username || 'Guest';
   const cleanCode = roomCode.trim().toUpperCase();
   GameState.isHost = false;
   GameState.hostingRoomCode = cleanCode;
 
   const joinBtn = document.getElementById('join-btn-el');
-  if (joinBtn) joinBtn.textContent = "...";
+  if (joinBtn) joinBtn.textContent = '...';
 
-  if (GameState.peer) {
-    try { GameState.peer.destroy(); } catch (e) {}
+  if (GameState.peer) { try { GameState.peer.destroy(); } catch (e) {} }
+  GameState.peer = null;
+  GameState.guestHostConn = null;
+
+  const generation = roomConnectionGeneration;
+  try {
+    const peer = new Peer(PEER_CONFIG);
+    GameState.peer = peer;
+
+    peer.on('open', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      const conn = peer.connect(`uno_match_${cleanCode}`, { reliable: true, serialization: 'json' });
+      attachGuestRoomConnection(conn, cleanCode, name, false, generation);
+    });
+
+    peer.on('disconnected', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      try { peer.reconnect(); } catch (e) {}
+      scheduleGuestRoomReconnect('peer disconnected');
+    });
+
+    peer.on('close', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      scheduleGuestRoomReconnect('peer closed');
+    });
+
+    peer.on('error', () => {
+      if (generation !== roomConnectionGeneration || intentionalRoomDisconnect) return;
+      if (joinBtn) joinBtn.textContent = 'Join';
+      scheduleGuestRoomReconnect('peer error');
+    });
+  } catch (e) {
+    if (joinBtn) joinBtn.textContent = 'Join';
+    scheduleGuestRoomReconnect('peer creation failed');
   }
-
-  GameState.peer = new Peer(PEER_CONFIG);
-
-  GameState.peer.on('open', () => {
-    const targetPeerId = `uno_match_${cleanCode}`;
-    const conn = GameState.peer.connect(targetPeerId, { reliable: true });
-    GameState.guestHostConn = conn;
-
-    conn.on('open', () => {
-      if (joinBtn) joinBtn.textContent = "Join";
-      conn.send({
-        type: 'JOIN_REQ',
-        name: name,
-        avatar: CurrentUser.avatar || '⚡'
-      });
-    });
-
-    conn.on('data', (data) => handleGuestData(conn, data));
-
-    conn.on('error', (err) => {
-      if (joinBtn) joinBtn.textContent = "Join";
-      alert("Failed to reach host: " + err);
-    });
-
-    conn.on('close', () => {
-      if (!GameState.inGame) {
-        alert("Disconnected from host room.");
-        leaveRoomLobby();
-      }
-    });
-  });
-
-  GameState.peer.on('error', (err) => {
-    if (joinBtn) joinBtn.textContent = "Join";
-    alert("Room connection error: " + err.message);
-  });
 }
 
 function handleHostData(conn, data) {
+  if (data.type === 'ROOM_HEARTBEAT') {
+    try { conn.send({ type: 'ROOM_HEARTBEAT_ACK', ts: data.ts || Date.now() }); } catch (e) {}
+    return;
+  }
+
+  if (data.type === 'RECONNECT_REQ') {
+    const key = data.clientKey || sanitizeUsername(data.name);
+    let existing = GameState.players.find(p => (p.clientKey && p.clientKey === key) || p.id === data.playerId);
+
+    if (existing) {
+      if (existing.conn && existing.conn !== conn) { try { existing.conn.close(); } catch (e) {} }
+      existing.conn = conn;
+      existing.isBot = false;
+      existing.avatar = data.avatar || existing.avatar || '😎';
+      existing.clientKey = existing.clientKey || key;
+      if (String(existing.name).endsWith(' (AI)')) existing.name = String(existing.name).slice(0, -5);
+
+      conn.send({
+        type: 'JOIN_ACCEPTED',
+        yourId: existing.id,
+        roomCode: GameState.hostingRoomCode,
+        edition: GameState.edition,
+        reconnect: true,
+        players: GameState.players.map(p => ({ name: p.name, avatar: p.avatar }))
+      });
+
+      if (GameState.inGame) sendStateToPlayer(existing);
+      else {
+        broadcastLobbyUpdate();
+        updateLobbyPlayerListUI();
+      }
+      return;
+    }
+
+    if (GameState.inGame || GameState.players.length >= 8) {
+      try { conn.send({ type: 'ERROR', msg: 'Room is full or match is already in progress.' }); } catch (e) {}
+      return;
+    }
+    data.type = 'JOIN_REQ';
+  }
+
   if (data.type === 'JOIN_REQ') {
+    const clientKey = data.clientKey || sanitizeUsername(data.name);
+    const existingClient = GameState.players.find(p => p.clientKey && p.clientKey === clientKey);
+    if (existingClient) {
+      if (existingClient.conn && existingClient.conn !== conn) { try { existingClient.conn.close(); } catch (e) {} }
+      existingClient.conn = conn;
+      existingClient.isBot = false;
+      existingClient.avatar = data.avatar || existingClient.avatar || '😎';
+      if (String(existingClient.name).endsWith(' (AI)')) existingClient.name = String(existingClient.name).slice(0, -5);
+      conn.send({ type: 'JOIN_ACCEPTED', yourId: existingClient.id, roomCode: GameState.hostingRoomCode, edition: GameState.edition, reconnect: true, players: GameState.players.map(p => ({ name: p.name, avatar: p.avatar })) });
+      broadcastLobbyUpdate();
+      updateLobbyPlayerListUI();
+      return;
+    }
+
+    if (GameState.players.length >= 8) {
+      try { conn.send({ type: 'ERROR', msg: 'Room is full (Max 8 Players)' }); } catch (e) {}
+      return;
+    }
+
     const newId = GameState.players.length;
     const newPlayer = {
       id: newId,
       name: data.name,
+      clientKey,
       avatar: data.avatar || '😎',
       hand: [],
       isBot: false,
@@ -3069,15 +3516,8 @@ function handleGuestData(conn, data) {
     document.getElementById('room-lobby-modal').style.display = 'none';
     showScreen('game');
   }
-  else if (data.type === 'RUN_DEAL_ANIM') {
-    runDealVisualAnimation(() => {});
-  }
-  else if (data.type === 'ANIM_CARD_THROW') {
-    const origin = getCardThrowOrigin(data.playerId, data.cardIndex);
-    animateCardThrow(origin, data.card, data.chosenColor, () => {});
-  }
-  else if (data.type === 'ANIM_CARD_PICKUP') {
-    animateCardPickup(data.playerId, data.count, () => {});
+  else if (data.type === 'RUN_DEAL_ANIM' || data.type === 'ANIM_CARD_THROW' || data.type === 'ANIM_CARD_PICKUP') {
+    queueOrRunNetworkAnimation(data);
   }
   else if (data.type === 'MATCH_OVER') {
     clearTimeout(guestActionTimeout);
@@ -3124,9 +3564,10 @@ function handleGuestData(conn, data) {
 
     if (sideChanged) triggerFlip3DTransition();
     else { updateTheme(); renderGame(); }
+    flushPendingNetworkAnimations();
   } 
   else if (data.type === 'VFX') {
-    triggerCenterSpecialVFX(data.vfxType, data.text);
+    queueOrRunNetworkAnimation(data);
   }
 }
 
@@ -3135,7 +3576,7 @@ function broadcastLobbyUpdate() {
   const pList = GameState.players.map(p => ({ name: p.name, avatar: p.avatar }));
   GameState.players.forEach(p => {
     if (p.conn && p.conn.open) {
-      p.conn.send({ type: 'LOBBY_UPDATE', players: pList, edition: GameState.edition });
+      try { p.conn.send({ type: 'LOBBY_UPDATE', players: pList, edition: GameState.edition }); } catch (e) {}
     }
   });
 }
@@ -3143,46 +3584,44 @@ function broadcastLobbyUpdate() {
 function broadcastAnimation(payload) {
   if (!GameState.isHost) return;
   GameState.players.forEach(p => {
-    if (p.conn && p.conn.open) p.conn.send(payload);
+    if (p.conn && p.conn.open) { try { p.conn.send(payload); } catch (e) {} }
   });
+}
+
+function sendStateToPlayer(p) {
+  if (!GameState.isHost || !GameState.inGame || !p || !p.conn || !p.conn.open) return;
+  try {
+    p.conn.send({
+      type: 'SYNC_STATE',
+      yourId: p.id,
+      state: {
+        edition: GameState.edition,
+        flipSide: GameState.flipSide,
+        discardPile: GameState.discardPile,
+        discardRotations: GameState.discardRotations,
+        rankings: GameState.rankings,
+        players: GameState.players.map(pl => ({
+          id: pl.id, name: pl.name, avatar: pl.avatar,
+          handCount: pl.hand ? pl.hand.length : 0,
+          hand: pl.id === p.id ? pl.hand : null,
+          oppositeFaces: (GameState.edition === 'flip' && pl.hand) ? pl.hand.map(c => getOppositeFace(c)) : (pl.oppositeFaces || []),
+          isBot: pl.isBot, hasWon: pl.hasWon, rank: pl.rank, eliminated: pl.eliminated
+        })),
+        turnIndex: GameState.turnIndex,
+        direction: GameState.direction,
+        stackedDrawCount: GameState.stackedDrawCount,
+        currentColor: GameState.currentColor,
+        allWildSkipCount: GameState.allWildSkipCount,
+        pendingAllWildDrawPlayerId: GameState.pendingAllWildDrawPlayerId,
+        pendingAllWildDrawCardIndex: GameState.pendingAllWildDrawCardIndex
+      }
+    });
+  } catch (e) {}
 }
 
 function broadcastState() {
   if (!GameState.isHost || !GameState.inGame) return;
-  GameState.players.forEach(p => {
-    if (p.conn && p.conn.open) {
-      p.conn.send({
-        type: 'SYNC_STATE',
-        yourId: p.id,
-        state: {
-          edition: GameState.edition,
-          flipSide: GameState.flipSide,
-          discardPile: GameState.discardPile,
-          discardRotations: GameState.discardRotations,
-          rankings: GameState.rankings,
-          players: GameState.players.map(pl => ({
-            id: pl.id,
-            name: pl.name,
-            avatar: pl.avatar,
-            handCount: pl.hand ? pl.hand.length : 0,
-            hand: pl.id === p.id ? pl.hand : null,
-            oppositeFaces: (GameState.edition === 'flip' && pl.hand) ? pl.hand.map(c => getOppositeFace(c)) : (pl.oppositeFaces || []),
-            isBot: pl.isBot,
-            hasWon: pl.hasWon,
-            rank: pl.rank,
-            eliminated: pl.eliminated
-          })),
-          turnIndex: GameState.turnIndex,
-          direction: GameState.direction,
-          stackedDrawCount: GameState.stackedDrawCount,
-          currentColor: GameState.currentColor,
-          allWildSkipCount: GameState.allWildSkipCount,
-          pendingAllWildDrawPlayerId: GameState.pendingAllWildDrawPlayerId,
-          pendingAllWildDrawCardIndex: GameState.pendingAllWildDrawCardIndex
-        }
-      });
-    }
-  });
+  GameState.players.forEach(sendStateToPlayer);
   renderGame();
 }
 
@@ -3249,6 +3688,9 @@ function renderLobbyPlayerRows(players) {
 }
 
 function leaveRoomLobby() {
+  intentionalRoomDisconnect = true;
+  roomConnectionGeneration++;
+  clearRoomNetworkTimers();
   document.getElementById('room-lobby-modal').style.display = 'none';
   if (GameState.peer) {
     try { GameState.peer.destroy(); } catch (e) {}
@@ -3256,6 +3698,8 @@ function leaveRoomLobby() {
   }
   GameState.hostingRoomCode = null;
   GameState.guestHostConn = null;
+  roomReconnectAttempts = 0;
+  roomReconnectInProgress = false;
   showScreen('lobby');
 }
 
@@ -3317,6 +3761,9 @@ function startSoloGameWithParams(botCount, difficulty) {
 
 function initGameEngine() {
   GameState.inGame = true;
+  if (GameState.isHost) { intentionalRoomDisconnect = false; clearRoomNetworkTimers(); }
+  animationRunToken += 1;
+  pendingNetworkAnimations = [];
   GameState.drawPile = buildDeck(GameState.edition);
   GameState.discardPile = [];
   GameState.discardRotations = [];
@@ -3366,6 +3813,9 @@ function confirmQuitGame() {
 }
 
 function closeMatchEndAndReturnToLobby() {
+  intentionalRoomDisconnect = true;
+  roomConnectionGeneration++;
+  clearRoomNetworkTimers();
   GameState.inGame = false;
   GameState.isDealing = false;
   setTurnLocked(false);
@@ -3382,6 +3832,8 @@ function closeMatchEndAndReturnToLobby() {
 
   const flyLayer = document.getElementById('fly-animation-layer');
   if (flyLayer) flyLayer.innerHTML = '';
+  pendingNetworkAnimations = [];
+  animationRunToken += 1;
 
   if (GameState.peer) {
     try { GameState.peer.destroy(); } catch (e) {}
@@ -3421,6 +3873,7 @@ function closeMatchEndAndReturnToLobby() {
 }
 
 function returnToRoomLobbyAfterMatch() {
+  intentionalRoomDisconnect = false;
   const modal = document.getElementById('match-end-modal');
   if (modal) modal.style.display = 'none';
 
@@ -3487,7 +3940,7 @@ function returnToRoomLobbyAfterMatch() {
   } else {
     openRoomLobbyModal(GameState.hostingRoomCode, false);
     if (GameState.guestHostConn && GameState.guestHostConn.open) {
-      GameState.guestHostConn.send({ type: 'GUEST_RETURNED_TO_LOBBY', playerId: GameState.myPlayerId });
+      sendGuestRoomMessage({ type: 'GUEST_RETURNED_TO_LOBBY', playerId: GameState.myPlayerId });
     }
   }
 }
@@ -4100,134 +4553,160 @@ function renderLeaderboard() {
 }
 
 /* HARDWARE-ACCELERATED MOBILE CARD ANIMATIONS */
+function scheduleVisualTransition(startFn) {
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    try { startFn(); } catch (e) {}
+  }));
+}
+
 function animateCardThrow(origin, cardData, chosenColor, callback) {
   const flyLayer = document.getElementById('fly-animation-layer');
   const discardBox = document.getElementById('discard-pile-3d');
   const { halfW, halfH } = getCardDimensions();
-  if (!discardBox || !flyLayer) {
-    if (callback) callback(0);
-    return;
-  }
+  const runToken = animationRunToken;
+  if (!discardBox || !flyLayer || !GameState.inGame) { if (callback) callback(0); return; }
 
   const toRect = discardBox.getBoundingClientRect();
-  const destX = (toRect.width > 0) ? toRect.left : (window.innerWidth * 0.60 - halfW);
-  const destY = (toRect.height > 0) ? toRect.top : (window.innerHeight * 0.39 - halfH);
-
-  const startX = origin.x;
-  const startY = origin.y;
-
+  const destX = toRect.width > 0 ? toRect.left : window.innerWidth * 0.60 - halfW;
+  const destY = toRect.height > 0 ? toRect.top : window.innerHeight * 0.39 - halfH;
   const flyer = createCardElement(cardData, chosenColor);
   flyer.className += ' flying-card-obj';
-  flyer.style.transform = `translate3d(${startX}px, ${startY}px, 0px) scale(0.9) rotate(0deg)`;
-
+  flyer.style.willChange = 'transform, opacity';
+  flyer.style.backfaceVisibility = 'hidden';
+  flyer.style.transform = `translate3d(${origin.x}px, ${origin.y}px, 0) scale(0.9) rotate(0deg)`;
   flyLayer.appendChild(flyer);
-  AudioEngine.cardThrow();
 
-  void flyer.offsetWidth;
   const randomRot = Math.floor(Math.random() * 24) - 12;
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    if (flyer.isConnected) flyer.remove();
+    if (callback && runToken === animationRunToken) callback(randomRot);
+  };
 
-  setTimeout(() => {
-    flyer.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
-    flyer.style.transform = `translate3d(${destX}px, ${destY}px, 0px) scale(1) rotate(${randomRot}deg) translateY(-4px)`;
-
-    setTimeout(() => {
-      flyer.remove();
-      if (callback) callback(randomRot);
-    }, 360);
-  }, 20);
+  AudioEngine.cardThrow();
+  void flyer.offsetWidth;
+  scheduleVisualTransition(() => {
+    if (!flyer.isConnected || runToken !== animationRunToken || !GameState.inGame) return finish();
+    flyer.style.transition = 'transform 0.38s cubic-bezier(0.22, 1, 0.36, 1)';
+    flyer.style.transform = `translate3d(${destX}px, ${destY}px, 0) scale(1) rotate(${randomRot}deg) translateY(-4px)`;
+    setTimeout(finish, 430);
+  });
 }
 
 function animateCardPickup(targetPlayerId, count, callback) {
   const flyLayer = document.getElementById('fly-animation-layer');
   const drawDeck = document.getElementById('draw-deck-3d');
-  const { halfW, halfH } = getCardDimensions();
-  const fromRect = drawDeck ? drawDeck.getBoundingClientRect() : { left: window.innerWidth * 0.40 - halfW, top: window.innerHeight * 0.39 - halfH };
-  const startX = fromRect.left;
-  const startY = fromRect.top;
+  if (!flyLayer || !GameState.inGame || !count || count <= 0) { if (callback) callback(); return; }
 
+  const { halfW, halfH } = getCardDimensions();
+  const fromRect = drawDeck ? drawDeck.getBoundingClientRect() : { left: window.innerWidth * 0.40 - halfW, top: window.innerHeight * 0.39 - halfH, width: 0, height: 0 };
+  const startX = fromRect.width > 0 ? fromRect.left : window.innerWidth * 0.40 - halfW;
+  const startY = fromRect.height > 0 ? fromRect.top : window.innerHeight * 0.39 - halfH;
   const destOrigin = getCardThrowOrigin(targetPlayerId);
+  const runToken = animationRunToken;
+  let completed = 0;
+  let finishedCallback = false;
+
+  const complete = () => {
+    completed++;
+    if (completed >= count && !finishedCallback) {
+      finishedCallback = true;
+      if (callback && runToken === animationRunToken) callback();
+    }
+  };
 
   for (let i = 0; i < count; i++) {
     setTimeout(() => {
-      if (!GameState.inGame) return;
+      if (!GameState.inGame || runToken !== animationRunToken) return complete();
       const flyer = document.createElement('div');
       flyer.className = 'card flying-card-obj';
+      flyer.style.willChange = 'transform, opacity';
+      flyer.style.backfaceVisibility = 'hidden';
       flyer.innerHTML = `<div class="card-back-design"><div class="card-back-oval"><div class="card-back-logo">UNO</div></div></div>`;
-      flyer.style.transform = `translate3d(${startX}px, ${startY}px, 0px) scale(0.85) rotate(0deg)`;
-
+      flyer.style.transform = `translate3d(${startX}px, ${startY}px, 0) scale(0.85) rotate(0deg)`;
       flyLayer.appendChild(flyer);
       AudioEngine.cardPickup();
-
       void flyer.offsetWidth;
-
-      setTimeout(() => {
+      scheduleVisualTransition(() => {
+        if (!flyer.isConnected || runToken !== animationRunToken || !GameState.inGame) {
+          if (flyer.isConnected) flyer.remove();
+          return complete();
+        }
         const rot = Math.random() * 18 - 9;
-        flyer.style.transition = 'transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)';
-        flyer.style.transform = `translate3d(${destOrigin.x}px, ${destOrigin.y}px, 0px) scale(0.75) rotate(${rot}deg)`;
-
+        flyer.style.transition = 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)';
+        flyer.style.transform = `translate3d(${destOrigin.x}px, ${destOrigin.y}px, 0) scale(0.75) rotate(${rot}deg)`;
         setTimeout(() => {
-          flyer.remove();
-          if (i === count - 1 && callback) callback();
-        }, 330);
-      }, 20);
+          if (flyer.isConnected) flyer.remove();
+          complete();
+        }, 380);
+      });
     }, i * 70);
   }
 }
 
 function runDealVisualAnimation(onComplete) {
+  if (activeDealIntervalTimer) { clearInterval(activeDealIntervalTimer); activeDealIntervalTimer = null; }
   GameState.isDealing = true;
+  const runToken = ++animationRunToken;
   const flyLayer = document.getElementById('fly-animation-layer');
   const drawDeck = document.getElementById('draw-deck-3d');
-  const { halfW, halfH } = getCardDimensions();
-  if (!drawDeck) {
+  if (!flyLayer || !drawDeck || !GameState.inGame) {
     GameState.isDealing = false;
     if (onComplete) onComplete();
     return;
   }
+
+  flyLayer.innerHTML = '';
   const fromRect = drawDeck.getBoundingClientRect();
   const startX = fromRect.left;
   const startY = fromRect.top;
-
-  const totalCards = 7 * GameState.players.length;
+  const totalCards = 7 * Math.max(1, GameState.players.length);
   let cardCount = 0;
-  const dealInterval = Math.max(22, Math.floor(260 / GameState.players.length));
+  const dealInterval = Math.max(22, Math.floor(260 / Math.max(1, GameState.players.length)));
 
   activeDealIntervalTimer = setInterval(() => {
-    if (!GameState.inGame) {
+    if (!GameState.inGame || runToken !== animationRunToken) {
       clearInterval(activeDealIntervalTimer);
       activeDealIntervalTimer = null;
       return;
     }
-    const playerIdx = cardCount % GameState.players.length;
-    const p = GameState.players[playerIdx];
-    const destOrigin = getCardThrowOrigin(p.id);
 
+    const p = GameState.players[cardCount % GameState.players.length];
+    if (!p) { cardCount++; return; }
+    const destOrigin = getCardThrowOrigin(p.id);
     const flyer = document.createElement('div');
     flyer.className = 'card flying-card-obj';
+    flyer.style.willChange = 'transform, opacity';
+    flyer.style.backfaceVisibility = 'hidden';
     flyer.innerHTML = `<div class="card-back-design"><div class="card-back-oval"><div class="card-back-logo">UNO</div></div></div>`;
-    flyer.style.transform = `translate3d(${startX}px, ${startY}px, 0px) scale(0.78) rotate(0deg)`;
+    flyer.style.transform = `translate3d(${startX}px, ${startY}px, 0) scale(0.78) rotate(0deg)`;
     flyLayer.appendChild(flyer);
     AudioEngine.cardPickup();
-
     void flyer.offsetWidth;
 
-    setTimeout(() => {
+    scheduleVisualTransition(() => {
+      if (!flyer.isConnected || runToken !== animationRunToken || !GameState.inGame) {
+        if (flyer.isConnected) flyer.remove();
+        return;
+      }
       const rot = Math.random() * 16 - 8;
-      flyer.style.transition = 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)';
-      flyer.style.transform = `translate3d(${destOrigin.x}px, ${destOrigin.y}px, 0px) scale(0.68) rotate(${rot}deg)`;
-
-      setTimeout(() => {
-        flyer.remove();
-      }, 310);
-    }, 20);
+      flyer.style.transition = 'transform 0.32s cubic-bezier(0.22, 1, 0.36, 1)';
+      flyer.style.transform = `translate3d(${destOrigin.x}px, ${destOrigin.y}px, 0) scale(0.68) rotate(${rot}deg)`;
+      setTimeout(() => { if (flyer.isConnected) flyer.remove(); }, 360);
+    });
 
     cardCount++;
     if (cardCount >= totalCards) {
       clearInterval(activeDealIntervalTimer);
       activeDealIntervalTimer = null;
-      GameState.isDealing = false;
-      renderGame();
-      if (onComplete) onComplete();
+      setTimeout(() => {
+        if (runToken !== animationRunToken || !GameState.inGame) return;
+        GameState.isDealing = false;
+        renderGame();
+        if (onComplete) onComplete();
+      }, 120);
     }
   }, dealInterval);
 }
@@ -4977,7 +5456,7 @@ function onHumanCardClick(idx) {
     } else if (GameState.guestHostConn) {
       clearTimeout(guestActionTimeout);
       guestActionTimeout = setTimeout(() => setTurnLocked(false), 5000);
-      GameState.guestHostConn.send({ type: 'PLAY_CARD', playerId: GameState.myPlayerId, cardIndex: idx });
+      if (!sendGuestRoomMessage({ type: 'PLAY_CARD', playerId: GameState.myPlayerId, cardIndex: idx })) setTurnLocked(false);
     }
   } else if (face.color.startsWith('wild')) {
     GameState.pendingWildCard = idx;
@@ -4988,7 +5467,7 @@ function onHumanCardClick(idx) {
     } else if (GameState.guestHostConn) {
       clearTimeout(guestActionTimeout);
       guestActionTimeout = setTimeout(() => setTurnLocked(false), 3500);
-      GameState.guestHostConn.send({ type: 'PLAY_CARD', playerId: GameState.myPlayerId, cardIndex: idx });
+      if (!sendGuestRoomMessage({ type: 'PLAY_CARD', playerId: GameState.myPlayerId, cardIndex: idx })) setTurnLocked(false);
     }
   }
 }
@@ -5006,7 +5485,7 @@ function onDrawDeckClick() {
   } else if (GameState.guestHostConn) {
     clearTimeout(guestActionTimeout);
     guestActionTimeout = setTimeout(() => setTurnLocked(false), 3500);
-    GameState.guestHostConn.send({ type: 'DRAW_CARD', playerId: GameState.myPlayerId });
+    if (!sendGuestRoomMessage({ type: 'DRAW_CARD', playerId: GameState.myPlayerId })) setTurnLocked(false);
   }
 }
 
@@ -5050,12 +5529,12 @@ function openAllWildTargetPicker(cardIdx) {
       } else if (GameState.guestHostConn) {
         clearTimeout(guestActionTimeout);
         guestActionTimeout = setTimeout(() => setTurnLocked(false), 3500);
-        GameState.guestHostConn.send({
+        if (!sendGuestRoomMessage({
           type: 'PLAY_CARD',
           playerId: GameState.myPlayerId,
           cardIndex: pendingIdx,
           targetPlayerId: chosenTarget
-        });
+        })) setTurnLocked(false);
       }
     };
     list.appendChild(btn);
@@ -5079,7 +5558,7 @@ function callUno() {
     triggerCenterSpecialVFX('reverse', 'YOU CALLED UNO!');
     AudioEngine.uno();
   } else if (GameState.guestHostConn) {
-    GameState.guestHostConn.send({ type: 'CALL_UNO', playerId: GameState.myPlayerId });
+    sendGuestRoomMessage({ type: 'CALL_UNO', playerId: GameState.myPlayerId });
   }
 }
 
@@ -5119,12 +5598,12 @@ function openColorPicker() {
       } else if (GameState.guestHostConn) {
         clearTimeout(guestActionTimeout);
         guestActionTimeout = setTimeout(() => setTurnLocked(false), 3500);
-        GameState.guestHostConn.send({
+        if (!sendGuestRoomMessage({
           type: 'PLAY_CARD',
           playerId: GameState.myPlayerId,
           cardIndex: GameState.pendingWildCard,
           chosenColor: col.c
-        });
+        })) setTurnLocked(false);
       }
       GameState.pendingWildCard = null;
     };
@@ -5181,11 +5660,27 @@ window.addEventListener('load', () => {
   selectBotCount(3);
   updateSortButtonUI();
   updateFullscreenUI();
+  updateMuteButtonUI();
+  attemptAutoFullscreenAndOrientation();
 });
 
-window.addEventListener('resize', () => { 
-  if (GameState.players.length > 0 && GameState.inGame) renderGame(); 
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    attemptAutoFullscreenAndOrientation();
+    if (!GameState.isHost && GameState.hostingRoomCode && !GameState.guestHostConn && !intentionalRoomDisconnect) {
+      scheduleGuestRoomReconnect('page visible');
+    }
+  }
+});
+
+window.addEventListener('pageshow', () => {
+  attemptAutoFullscreenAndOrientation();
+});
+
+window.addEventListener('resize', () => {
+  if (GameState.players.length > 0 && GameState.inGame) renderGame();
   updateFullscreenUI();
+  attemptAutoFullscreenAndOrientation();
 });
 </script>
 </body>
