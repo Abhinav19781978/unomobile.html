@@ -356,6 +356,105 @@
   }
   .diff-slider-ticks { display: flex; justify-content: space-between; font-size: 0.64rem; font-weight: 900; color: #8fa0b5; }
 
+  /* RULE BOOK */
+  #rulebook-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 9, 18, 0.94);
+    backdrop-filter: blur(20px);
+    z-index: 650;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+  }
+  .rulebook-card {
+    background: #0f182b;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 18px;
+    width: min(92vw, 550px);
+    max-height: 88vh;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.85);
+  }
+  .rulebook-tabs { display:flex; gap:6px; width:100%; overflow-x:auto; padding-bottom:2px; }
+  .rule-tab-btn {
+    flex:1; min-width:76px; padding:8px 4px; border-radius:10px;
+    background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.18);
+    color:#fff; font-family:'Montserrat',sans-serif; font-weight:800; font-size:0.7rem;
+    cursor:pointer; transition:all 0.2s ease; text-align:center; outline:none;
+  }
+  .rule-tab-btn.active {
+    background:linear-gradient(135deg,#ffc400,#f77000);
+    border-color:#ffd700; color:#000; box-shadow:0 0 16px rgba(255,196,0,0.45);
+  }
+  .rulebook-content {
+    overflow-y:auto; max-height:60vh; padding-right:5px;
+    font-size:0.76rem; line-height:1.5; color:#cbd5e1;
+  }
+  .rulebook-content h4 { color:#f7b300; font-size:0.9rem; margin:9px 0 4px; font-weight:800; }
+  .rulebook-content h4:first-child { margin-top:0; }
+  .rulebook-content p { margin-bottom:7px; }
+  .rulebook-content ul { margin-left:17px; margin-bottom:7px; }
+  .rulebook-content li { margin-bottom:4px; }
+  .rulebook-content .badge-rule {
+    display:inline-block; font-weight:800; padding:2px 5px; border-radius:5px;
+    background:rgba(255,255,255,0.1); color:#ffd700; margin-right:3px;
+  }
+
+  /* ALL WILD */
+  #allwild-pass-btn {
+    position:absolute;
+    right:calc(env(safe-area-inset-right, 10px) + 4px);
+    bottom:78px;
+    min-width:104px;
+    height:40px;
+    padding:0 12px;
+    border-radius:20px;
+    border:2px solid rgba(255,255,255,0.9);
+    background:linear-gradient(135deg,#7514a6,#0076e6);
+    color:#fff;
+    font-family:inherit;
+    font-size:0.72rem;
+    font-weight:900;
+    letter-spacing:0.5px;
+    cursor:pointer;
+    box-shadow:0 0 20px rgba(117,20,166,0.75);
+    z-index:101;
+    display:none;
+  }
+  #allwild-pass-btn.show { display:block; animation:allWildPassPulse 0.9s infinite alternate; }
+  @keyframes allWildPassPulse { 0%{transform:scale(.98)} 100%{transform:scale(1.04);filter:brightness(1.2)} }
+
+  #allwild-target-modal {
+    position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:700;
+    display:none; justify-content:center; align-items:center; padding:10px;
+  }
+  .allwild-target-card {
+    width:min(92vw,420px);
+    background:linear-gradient(180deg,#141028 0%,#080910 100%);
+    border:2px solid rgba(255,215,0,0.55);
+    border-radius:20px; padding:16px;
+    box-shadow:0 25px 80px rgba(0,0,0,0.9),0 0 35px rgba(117,20,166,0.25);
+    display:flex; flex-direction:column; gap:10px; text-align:center;
+  }
+  .allwild-target-title { font-size:1rem; font-weight:900; color:#f7b300; letter-spacing:0.8px; }
+  .allwild-target-subtitle { font-size:0.72rem; color:#9aa7ba; font-weight:700; line-height:1.4; }
+  .allwild-target-list { display:grid; grid-template-columns:1fr 1fr; gap:7px; max-height:46vh; overflow-y:auto; padding-right:2px; }
+  .allwild-target-btn {
+    min-height:52px; border-radius:12px; background:rgba(255,255,255,0.07);
+    border:1.5px solid rgba(255,255,255,0.18); color:#fff; font-family:inherit;
+    font-weight:900; font-size:0.75rem; cursor:pointer; display:flex; align-items:center;
+    justify-content:center; gap:6px; padding:7px; transition:transform .15s,background .15s,border-color .15s;
+  }
+  .allwild-target-btn:hover { transform:translateY(-2px) scale(1.02); background:rgba(117,20,166,0.3); border-color:#f7b300; }
+  .allwild-target-avatar { font-size:1.2rem; }
+  .allwild-target-name { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .allwild-cancel-btn { width:100%; padding:9px 12px; border-radius:12px; border:1px solid rgba(255,255,255,0.2); background:rgba(234,35,35,0.22); color:#fff; font-family:inherit; font-weight:900; cursor:pointer; }
+
   /* Modals */
   #room-lobby-modal, #solo-setup-modal, #friends-modal, #emoji-picker-modal {
     position: fixed;
@@ -523,6 +622,14 @@
   }
   #arena-bg.blue-theme { background: radial-gradient(circle at 50% 45%, #0d2847 0%, #061426 55%, #02070f 100%); }
   #arena-bg.dark-theme { background: radial-gradient(circle at 50% 45%, #300636 0%, #150119 55%, #050007 100%); }
+  .table-stage.allwild-stage {
+    background: radial-gradient(ellipse at center, #7a2cff 0%, #35117d 46%, #17083a 80%, #07020f 100%);
+    box-shadow: 0 0 30px rgba(122,44,255,0.4), inset 0 0 35px rgba(0,0,0,0.9);
+    border-color: #16082e;
+  }
+  #arena-bg.allwild-theme {
+    background: radial-gradient(circle at 50% 45%, #180b35 0%, #0b051a 52%, #020106 100%);
+  }
 
   /* 3D Center Stage Mat */
   .table-stage {
@@ -531,7 +638,7 @@
     left: 50%;
     transform: translate(-50%, -50%) rotateX(28deg);
     transform-style: preserve-3d;
-    width: min(66vw, 440px);
+    width: min(88vw, 720px);
     height: min(26vh, 125px);
     border-radius: 100px;
     background: radial-gradient(ellipse at center, #ff7a00 0%, #e63200 45%, #8f1000 80%, #450300 100%);
@@ -1398,6 +1505,110 @@
     </div>
   </div>
 
+  <div id="rulebook-modal">
+    <div class="rulebook-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.15); padding-bottom:8px;">
+        <div style="font-size: 1.3rem; font-weight: 900; color: #f7b300; display:flex; align-items:center; gap:8px;">
+          <span>📖</span><span>OFFICIAL RULE BOOK</span>
+        </div>
+        <button class="pill-btn" onclick="closeRulebookModal()" style="font-size:1.4rem;">✕</button>
+      </div>
+
+      <!-- Page Switcher Tabs -->
+      <div class="rulebook-tabs">
+        <button type="button" class="rule-tab-btn active" id="rule-tab-classic" onclick="switchRulePage('classic')">Classic UNO</button>
+        <button type="button" class="rule-tab-btn" id="rule-tab-flip" onclick="switchRulePage('flip')">UNO Flip!</button>
+        <button type="button" class="rule-tab-btn" id="rule-tab-nomercy" onclick="switchRulePage('nomercy')">No Mercy</button>
+        <button type="button" class="rule-tab-btn" id="rule-tab-allwild" onclick="switchRulePage('allwild')">All Wild</button>
+      </div>
+
+      <!-- PAGE 1: CLASSIC UNO -->
+      <div class="rulebook-content" id="rule-content-classic">
+        <h4>Objective</h4>
+        <p>Be the first player to play all cards from your hand before your opponents!</p>
+
+        <h4>Gameplay Basics</h4>
+        <ul>
+          <li>On your turn, match the top discard card by <b>Color</b>, <b>Number</b>, or <b>Symbol</b>.</li>
+          <li>If you have no playable card, tap the <b>Draw Deck</b> to draw 1 card.</li>
+        </ul>
+
+        <h4>Special Action Cards</h4>
+        <ul>
+          <li><span class="badge-rule">Skip (⊘)</span> Next player loses their turn.</li>
+          <li><span class="badge-rule">Reverse (⇄)</span> Reverses turn direction. In a 2-player match, acts as a Skip.</li>
+          <li><span class="badge-rule">Draw Two (+2)</span> Next player draws 2 cards and forfeits their turn (or stacks if matching).</li>
+          <li><span class="badge-rule">Wild</span> Can be played on any card; player chooses the next active color.</li>
+          <li><span class="badge-rule">Wild Draw Four (+4)</span> Player chooses active color, and next player draws 4 cards.</li>
+        </ul>
+
+        <h4>Calling UNO</h4>
+        <p>When you have only <b>1 card remaining</b>, you must press the flashing <b>UNO!</b> button before your turn ends!</p>
+      </div>
+
+      <!-- PAGE 2: UNO FLIP! -->
+      <div class="rulebook-content" id="rule-content-flip" style="display:none;">
+        <h4>The Flip Mechanic</h4>
+        <p>Cards have two sides: a <b>Light Side</b> (Red, Blue, Green, Yellow) and a <b>Dark Side</b> (Pink, Teal, Purple, Orange). When a <span class="badge-rule">FLIP (🗘)</span> card is played, the entire match flips over: your hand, opponent hands, draw pile, and discard stack!</p>
+
+        <h4>Light Side Actions</h4>
+        <ul>
+          <li><span class="badge-rule">Draw One (+1)</span> Next player draws 1 card.</li>
+          <li><span class="badge-rule">Skip (⊘)</span> Skips the next player.</li>
+          <li><span class="badge-rule">Reverse (⇄)</span> Reverses direction of play.</li>
+          <li><span class="badge-rule">Wild</span> Changes color to any Light color.</li>
+        </ul>
+
+        <h4>Dark Side Actions (Brutal & Penalizing)</h4>
+        <ul>
+          <li><span class="badge-rule">Draw Five (+5)</span> Next player must draw 5 cards immediately!</li>
+          <li><span class="badge-rule">Skip Everyone</span> Skips every other player at the table—you immediately take another turn!</li>
+          <li><span class="badge-rule">Dark Reverse</span> Reverses direction under dark rules.</li>
+          <li><span class="badge-rule">Wild Draw Color</span> Player chooses a color; the victim must keep drawing from the deck until that specific color appears!</li>
+        </ul>
+      </div>
+
+      <!-- PAGE 3: UNO SHOW 'EM NO MERCY -->
+      <div class="rulebook-content" id="rule-content-nomercy" style="display:none;">
+        <h4>Extreme Rules & The Mercy Knockout</h4>
+        <p>Show 'Em No Mercy is the toughest, fastest edition of UNO with cutthroat stacking rules.</p>
+        <p><b>Mercy Rule:</b> If any player ever accumulates <b>25 or more cards</b> in their hand at once, they are automatically <b>knocked out</b> of the match!</p>
+
+        <h4>Attack Cards & Stacking</h4>
+        <ul>
+          <li><span class="badge-rule">+4, +6, +10</span> Heavy penalties! All draw cards can be stacked on each other if you play an equal or higher draw card to pass the attack streak down the line.</li>
+          <li><span class="badge-rule">Discard All</span> Discards all cards in your hand matching the active color in a single turn.</li>
+          <li><span class="badge-rule">Wild Reverse +4 (⇄+4)</span> Reverses turn direction AND attacks the player behind you with 4 cards.</li>
+          <li><span class="badge-rule">Skip All</span> Gives you another immediate turn while skipping the rest of the table.</li>
+        </ul>
+      </div>
+
+      <!-- PAGE 4: UNO ALL WILD -->
+      <div class="rulebook-content" id="rule-content-allwild" style="display:none;">
+        <h4>Every Card Is Wild</h4>
+        <p>There are <b>112 cards</b> and every card is wild. You never match colors or numbers, so any card may be played.</p>
+
+        <h4>Wild Cards</h4>
+        <ul>
+          <li><span class="badge-rule">Wild</span> No action. You may call out a color, but it <b>does not change anything</b> in All Wild.</li>
+          <li><span class="badge-rule">Wild Reverse</span> Reverses the direction of play.</li>
+          <li><span class="badge-rule">Wild Skip</span> Skips the next player.</li>
+          <li><span class="badge-rule">Wild Skip Two</span> Skips the next two players.</li>
+          <li><span class="badge-rule">Wild Draw Two</span> Next player draws 2 cards and loses their turn.</li>
+          <li><span class="badge-rule">Wild Draw Four</span> Next player draws 4 cards and loses their turn.</li>
+          <li><span class="badge-rule">Targeted Draw Two</span> Choose another player to draw 2 cards; they keep their next turn.</li>
+          <li><span class="badge-rule">Forced Swap</span> You <b>must</b> choose another player and exchange entire hands.</li>
+        </ul>
+
+        <h4>Drawing</h4>
+        <p>Because every card is playable, drawing is a strategic choice. You may draw 1 card instead of playing. After drawing, you may play <b>only the card you just drew</b>, or pass without playing it.</p>
+
+        <h4>Starting & Winning</h4>
+        <p>Deal 7 cards to each player. If the first discard is an action card, its action is ignored. When a player plays their final card, they win (with the Forced Swap action still resolving when applicable).</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Friends List Modal -->
   <div id="friends-modal">
     <div class="friends-card">
@@ -1475,6 +1686,7 @@
           <option value="flip">UNO FLIP! (Light & Dark Sides)</option>
           <option value="classic">Standard UNO (Classic Rules)</option>
           <option value="nomercy">UNO Show 'Em NO MERCY!</option>
+          <option value="allwild">UNO All Wild! (Every Card Is Wild)</option>
         </select>
       </div>
 
@@ -1534,6 +1746,7 @@
           <option value="flip">UNO FLIP! (Light & Dark Sides)</option>
           <option value="classic">Standard UNO (Classic Rules)</option>
           <option value="nomercy">UNO Show 'Em NO MERCY!</option>
+          <option value="allwild">UNO All Wild! (Every Card Is Wild)</option>
         </select>
       </div>
 
@@ -1544,6 +1757,9 @@
 
       <button class="btn friends-btn" onclick="openFriendsModal()">
         👥 Friends List (<span id="friends-count-num">0</span>)
+      </button>
+      <button class="btn" style="background: linear-gradient(135deg, #ff9f43 0%, #ee5253 100%) !important;" onclick="openRulebookModal()">
+        📖 Rule Book
       </button>
 
       <div class="form-group" style="margin-top: 2px;">
@@ -1700,7 +1916,18 @@
     <div id="penalty-streak-box">ATTACK! +4</div>
     <div id="center-vfx-overlay"><div id="vfx-graphic-container"></div><div class="vfx-banner-txt" id="vfx-text">REVERSE!</div></div>
     <button id="uno-btn" onclick="callUno()">UNO!</button>
+    <button id="allwild-pass-btn" onclick="passAfterAllWildDraw()">PASS TURN</button>
     <div id="fly-animation-layer"></div>
+  </div>
+
+  <!-- All Wild Target Picker Modal -->
+  <div id="allwild-target-modal">
+    <div class="allwild-target-card">
+      <div class="allwild-target-title" id="allwild-target-title">CHOOSE A PLAYER</div>
+      <div class="allwild-target-subtitle" id="allwild-target-subtitle">Select an opponent for this All Wild action.</div>
+      <div class="allwild-target-list" id="allwild-target-list"></div>
+      <button class="allwild-cancel-btn" onclick="cancelAllWildTargetPicker()">CANCEL</button>
+    </div>
   </div>
 
   <!-- Color Wheel Modal -->
@@ -1875,6 +2102,27 @@ document.addEventListener('webkitfullscreenchange', updateFullscreenUI);
 document.addEventListener('pointerdown', () => {
   attemptAutoFullscreenAndOrientation();
 }, { passive: true });
+
+/**
+ * RULE BOOK MODAL CONTROLLERS
+ */
+function openRulebookModal() {
+  document.getElementById('rulebook-modal').style.display = 'flex';
+  switchRulePage('classic');
+}
+
+function closeRulebookModal() {
+  document.getElementById('rulebook-modal').style.display = 'none';
+}
+
+function switchRulePage(page) {
+  ['classic', 'flip', 'nomercy', 'allwild'].forEach(p => {
+    const tab = document.getElementById(`rule-tab-${p}`);
+    const content = document.getElementById(`rule-content-${p}`);
+    if (tab) tab.classList.toggle('active', p === page);
+    if (content) content.style.display = (p === page) ? 'block' : 'none';
+  });
+}
 
 const PEER_CONFIG = {
   debug: 1,
@@ -2308,6 +2556,7 @@ function confirmStartSoloGame() {
 function getEditionLabel(ed) {
   if (ed === 'classic') return "Standard UNO (Classic Rules)";
   if (ed === 'nomercy') return "UNO Show 'Em NO MERCY!";
+  if (ed === 'allwild') return "UNO All Wild! (Every Card Is Wild)";
   return "UNO FLIP! (Light & Dark Sides)";
 }
 
@@ -2492,7 +2741,10 @@ let GameState = {
   pendingWildCard: null,
   isDealing: false,
   inGame: false,
-  botDifficulty: 'standard'
+  botDifficulty: 'standard',
+  allWildSkipCount: 0,
+  pendingAllWildDrawPlayerId: null,
+  pendingAllWildDrawCardIndex: null
 };
 
 let activeDealIntervalTimer = null;
@@ -2506,7 +2758,8 @@ const COLOR_HEX = {
   pink: '#d80064',
   teal: '#00b8a9',
   purple: '#7514a6',
-  orange: '#f25500'
+  orange: '#f25500',
+  wild: '#ffffff'
 };
 
 function getActivePlayers() {
@@ -2549,6 +2802,14 @@ function buildFallbackCard() {
       id: Math.floor(Math.random() * 999999),
       light: { color: 'blue', value: '5', type: 'number' },
       dark: { color: 'teal', value: '5', type: 'number' }
+    };
+  }
+  if (GameState.edition === 'allwild') {
+    return {
+      id: Math.floor(Math.random() * 999999),
+      color: 'wild',
+      value: 'WILD',
+      type: 'wild'
     };
   }
   return {
@@ -2764,8 +3025,11 @@ function handleHostData(conn, data) {
     updateLobbyPlayerListUI();
   }
   else if (data.type === 'PLAY_CARD') {
-    executePlayCard(data.playerId, data.cardIndex, data.chosenColor);
+    executePlayCard(data.playerId, data.cardIndex, data.chosenColor, data.targetPlayerId);
   } 
+  else if (data.type === 'ALLWILD_PASS_DRAW') {
+    handleAllWildPass(data.playerId);
+  }
   else if (data.type === 'DRAW_CARD') {
     handlePlayerDraw(data.playerId);
   } 
@@ -2850,6 +3114,9 @@ function handleGuestData(conn, data) {
     GameState.direction = data.state.direction;
     GameState.stackedDrawCount = data.state.stackedDrawCount;
     GameState.currentColor = data.state.currentColor;
+    GameState.allWildSkipCount = data.state.allWildSkipCount || 0;
+    GameState.pendingAllWildDrawPlayerId = data.state.pendingAllWildDrawPlayerId ?? null;
+    GameState.pendingAllWildDrawCardIndex = data.state.pendingAllWildDrawCardIndex ?? null;
     GameState.myPlayerId = data.yourId;
 
     document.getElementById('room-lobby-modal').style.display = 'none';
@@ -2908,7 +3175,10 @@ function broadcastState() {
           turnIndex: GameState.turnIndex,
           direction: GameState.direction,
           stackedDrawCount: GameState.stackedDrawCount,
-          currentColor: GameState.currentColor
+          currentColor: GameState.currentColor,
+          allWildSkipCount: GameState.allWildSkipCount,
+          pendingAllWildDrawPlayerId: GameState.pendingAllWildDrawPlayerId,
+          pendingAllWildDrawCardIndex: GameState.pendingAllWildDrawCardIndex
         }
       });
     }
@@ -3053,6 +3323,9 @@ function initGameEngine() {
   GameState.rankings = [];
   GameState.flipSide = 'light';
   GameState.stackedDrawCount = 0;
+  GameState.allWildSkipCount = 0;
+  GameState.pendingAllWildDrawPlayerId = null;
+  GameState.pendingAllWildDrawCardIndex = null;
   GameState.direction = 1;
   GameState.turnIndex = 0;
   setTurnLocked(false);
@@ -3099,6 +3372,11 @@ function closeMatchEndAndReturnToLobby() {
   hostProcessingAction = false;
   clearTimeout(guestActionTimeout);
 
+  GameState.pendingWildCard = null;
+  GameState.allWildSkipCount = 0;
+  GameState.pendingAllWildDrawPlayerId = null;
+  GameState.pendingAllWildDrawCardIndex = null;
+
   if (activeDealIntervalTimer) { clearInterval(activeDealIntervalTimer); activeDealIntervalTimer = null; }
   if (activeBotTurnTimeout) { clearTimeout(activeBotTurnTimeout); activeBotTurnTimeout = null; }
 
@@ -3129,6 +3407,12 @@ function closeMatchEndAndReturnToLobby() {
   document.getElementById('solo-setup-modal').style.display = 'none';
   document.getElementById('match-end-modal').style.display = 'none';
   document.getElementById('color-picker-modal').style.display = 'none';
+  const allWildTargetModal = document.getElementById('allwild-target-modal');
+  if (allWildTargetModal) allWildTargetModal.style.display = 'none';
+  const allWildPassBtn = document.getElementById('allwild-pass-btn');
+  if (allWildPassBtn) allWildPassBtn.classList.remove('show');
+  const rulebookModal = document.getElementById('rulebook-modal');
+  if (rulebookModal) rulebookModal.style.display = 'none';
   document.getElementById('room-lobby-modal').style.display = 'none';
   GameState.hostingRoomCode = null;
   GameState.guestHostConn = null;
@@ -3150,6 +3434,11 @@ function returnToRoomLobbyAfterMatch() {
   setTurnLocked(false);
   hostProcessingAction = false;
   clearTimeout(guestActionTimeout);
+
+  GameState.pendingWildCard = null;
+  GameState.allWildSkipCount = 0;
+  GameState.pendingAllWildDrawPlayerId = null;
+  GameState.pendingAllWildDrawCardIndex = null;
 
   if (activeDealIntervalTimer) { clearInterval(activeDealIntervalTimer); activeDealIntervalTimer = null; }
   if (activeBotTurnTimeout) { clearTimeout(activeBotTurnTimeout); activeBotTurnTimeout = null; }
@@ -3174,6 +3463,12 @@ function returnToRoomLobbyAfterMatch() {
   }
 
   document.getElementById('color-picker-modal').style.display = 'none';
+  const allWildTargetModal = document.getElementById('allwild-target-modal');
+  if (allWildTargetModal) allWildTargetModal.style.display = 'none';
+  const allWildPassBtn = document.getElementById('allwild-pass-btn');
+  if (allWildPassBtn) allWildPassBtn.classList.remove('show');
+  const rulebookModal = document.getElementById('rulebook-modal');
+  if (rulebookModal) rulebookModal.style.display = 'none';
   document.getElementById('viewport-3d').style.display = 'none';
 
   if (GameState.isHost) {
@@ -3315,7 +3610,24 @@ function buildDeck(edition) {
       });
     }
   } 
-  else if (edition === 'nomercy') {
+  else if (edition === 'allwild') {
+    const allWildCards = [
+      ['WILD', 'wild', 54],
+      ['wild_reverse', 'wild', 14],
+      ['wild_skip', 'wild', 14],
+      ['wild_skip_two', 'wild', 6],
+      ['wild_draw_2', 'wild', 10],
+      ['wild_draw_4', 'wild', 6],
+      ['wild_targeted_draw_two', 'wild', 4],
+      ['wild_forced_swap', 'wild', 4]
+    ];
+    allWildCards.forEach(([value, type, count]) => {
+      for (let i = 0; i < count; i++) {
+        deck.push({ id: id++, color: 'wild', value, type });
+      }
+    });
+  }
+    else if (edition === 'nomercy') {
     const colors = ['red', 'blue', 'green', 'yellow'];
     colors.forEach(col => {
       for (let num = 0; num <= 9; num++) {
@@ -3368,6 +3680,19 @@ function getVectorCardInner(face) {
   if (val === 'WILD_COLOR') {
     return `<div class="wild-dark-quadrant"></div><div style="position:relative; z-index:2; transform: rotate(28deg);"><span style="font-family:'Montserrat'; font-weight:900; font-size:0.82rem; color:#fff; text-shadow: 1.5px 1.5px 0 #000;">COLOR</span></div>`;
   }
+  if (GameState.edition === 'allwild') {
+    if (val === 'wild_reverse') return `<div class="wild-quadrant"></div><svg viewBox="0 0 100 100" style="position:relative; z-index:2; width:70%; height:70%; transform: rotate(28deg);"><path d="M 28,62 L 14,44 L 30,44 C 40,44 50,50 50,62 L 40,62 C 40,54 34,51 30,51 L 28,62 Z" fill="#ffffff" stroke="#111" stroke-width="2.5"/><path d="M 72,38 L 86,56 L 70,56 C 60,56 50,50 50,38 L 60,38 C 60,46 66,49 70,49 L 72,38 Z" fill="#ffffff" stroke="#111" stroke-width="2.5"/></svg>`;
+    if (val === 'wild_skip') return `<div class="wild-quadrant"></div><svg viewBox="0 0 100 100" style="position:relative; z-index:2; width:70%; height:70%; transform: rotate(28deg);"><circle cx="50" cy="50" r="32" fill="none" stroke="#ffffff" stroke-width="11"/><line x1="28" y1="28" x2="72" y2="72" stroke="#ffffff" stroke-width="11"/><circle cx="50" cy="50" r="32" fill="none" stroke="#000" stroke-width="2"/><line x1="28" y1="28" x2="72" y2="72" stroke="#000" stroke-width="2"/></svg>`;
+    if (val === 'wild_skip_two') return `<div class="wild-quadrant"></div><div style="position:relative; z-index:2; transform:rotate(28deg); display:flex; flex-direction:column; align-items:center;"><span style="font-family:'Montserrat'; font-weight:900; font-size:1.05rem; color:#fff; text-shadow:2px 2px 0 #000;">SKIP</span><span style="font-family:'Montserrat'; font-weight:900; font-size:1.75rem; line-height:0.95; color:#fff; text-shadow:2px 2px 0 #000;">2</span></div>`;
+    if (val === 'wild_draw_2' || val === 'wild_targeted_draw_two') {
+      const label = val === 'wild_targeted_draw_two' ? 'T+2' : '+2';
+      const targetTag = val === 'wild_targeted_draw_two' ? `<span style="font-family:'Montserrat'; font-weight:900; font-size:0.55rem; color:#fff; text-shadow:1px 1px 0 #000; letter-spacing:0.8px;">TARGET</span>` : '';
+      return `<div class="wild-quadrant"></div><div style="position:relative; z-index:2; transform:rotate(28deg); display:flex; flex-direction:column; align-items:center;"><span style="font-family:'Montserrat'; font-weight:900; font-size:1.55rem; color:#fff; text-shadow:2px 2px 0 #000;">${label}</span>${targetTag}</div>`;
+    }
+    if (val === 'wild_draw_4') return `<div class="wild-quadrant"></div><div style="position:relative; z-index:2; transform:rotate(28deg); display:flex; flex-direction:column; align-items:center;"><span style="font-family:'Montserrat'; font-weight:900; font-size:1.65rem; color:#fff; text-shadow:2px 2px 0 #000;">+4</span></div>`;
+    if (val === 'wild_forced_swap') return `<div class="wild-quadrant"></div><div style="position:relative; z-index:2; transform:rotate(28deg); display:flex; flex-direction:column; align-items:center;"><span style="font-family:'Montserrat'; font-weight:900; font-size:0.9rem; color:#fff; text-shadow:2px 2px 0 #000;">SWAP</span><span style="font-size:1.6rem; line-height:0.9;">⇄</span></div>`;
+  }
+
   if (val === 'discard_all') {
     return `<svg viewBox="0 0 100 100" style="width:78%; height:78%; transform: rotate(28deg);"><rect x="14" y="24" width="30" height="46" rx="4" fill="#ffffff" stroke="#111" stroke-width="2.5" transform="rotate(-22 29 47)"/><rect x="32" y="16" width="30" height="46" rx="4" fill="#ffffff" stroke="#111" stroke-width="2.5" transform="rotate(-4 47 39)"/><rect x="52" y="22" width="30" height="46" rx="4" fill="#ffffff" stroke="#111" stroke-width="2.5" transform="rotate(16 67 45)"/><path d="M 50,56 L 50,84 M 40,74 L 50,84 L 60,74" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   }
@@ -3408,10 +3733,17 @@ function createCardElement(card, overrideColor = null) {
   else if (cornerDisplay === 'FLIP') cornerDisplay = '🗘';
   else if (cornerDisplay === 'discard_all') cornerDisplay = 'ALL';
   else if (cornerDisplay === 'wild_rev_+4') cornerDisplay = '⇄+4';
+  else if (cornerDisplay === 'wild_reverse') cornerDisplay = '⇄';
+  else if (cornerDisplay === 'wild_skip') cornerDisplay = '⊘';
+  else if (cornerDisplay === 'wild_skip_two') cornerDisplay = 'SKIP 2';
+  else if (cornerDisplay === 'wild_draw_2') cornerDisplay = '+2';
+  else if (cornerDisplay === 'wild_draw_4') cornerDisplay = '+4';
+  else if (cornerDisplay === 'wild_targeted_draw_two') cornerDisplay = 'T+2';
+  else if (cornerDisplay === 'wild_forced_swap') cornerDisplay = 'SWAP';
 
   cardDiv.innerHTML = `
     <div class="card-face">
-      <div class="mini-uno-badge">${GameState.edition === 'flip' ? 'FLIP!' : 'UNO'}</div>
+      <div class="mini-uno-badge">${GameState.edition === 'flip' ? 'FLIP!' : (GameState.edition === 'allwild' ? 'ALL WILD' : 'UNO')}</div>
       <div class="card-corner top-left">${cornerDisplay}</div>
       <div class="card-oval">${getVectorCardInner(face)}</div>
       <div class="card-corner bottom-right">${cornerDisplay}</div>
@@ -3430,6 +3762,13 @@ function createMiniOpponentCard(face) {
   else if (disp === 'FLIP') disp = '🗘';
   else if (disp === 'discard_all') disp = 'ALL';
   else if (disp === 'wild_rev_+4') disp = '⇄+4';
+  else if (disp === 'wild_reverse') disp = '⇄';
+  else if (disp === 'wild_skip') disp = '⊘';
+  else if (disp === 'wild_skip_two') disp = 'SK2';
+  else if (disp === 'wild_draw_2') disp = '+2';
+  else if (disp === 'wild_draw_4') disp = '+4';
+  else if (disp === 'wild_targeted_draw_two') disp = 'T+2';
+  else if (disp === 'wild_forced_swap') disp = 'SWAP';
 
   cardDiv.innerHTML = `
     <div class="card-face" style="border-radius:4px;">
@@ -3480,6 +3819,15 @@ function updateTheme() {
       deckLogo.textContent = 'UNO';
       deckLogo.style.color = '#f7b300';
     }
+  } else if (GameState.edition === 'allwild') {
+    stage.classList.add('allwild-stage');
+    arena.classList.add('allwild-theme');
+    if (deckBack) deckBack.style.background = '#111';
+    if (deckBackOval) deckBackOval.style.background = '#7514a6';
+    if (deckLogo) {
+      deckLogo.textContent = 'ALL WILD';
+      deckLogo.style.color = '#fff';
+    }
   } else {
     if (deckBack) deckBack.style.background = '#111';
     if (deckBackOval) deckBackOval.style.background = '#ea2323';
@@ -3495,7 +3843,7 @@ function renderGame() {
   const dirEl = document.getElementById('dir-ring');
   if (dirEl) dirEl.className = GameState.direction === -1 ? 'direction-ring-3d reverse' : 'direction-ring-3d';
 
-  const curColorHex = COLOR_HEX[GameState.currentColor] || '#ea2323';
+  const curColorHex = GameState.edition === 'allwild' ? '#ffffff' : (COLOR_HEX[GameState.currentColor] || '#ea2323');
   document.documentElement.style.setProperty('--active-glow-color', curColorHex);
 
   const discardBox = document.getElementById('discard-pile-3d');
@@ -3511,7 +3859,7 @@ function renderGame() {
     const dotEl = document.getElementById('badge-dot');
     const textEl = document.getElementById('badge-text');
     if (dotEl) dotEl.style.background = curColorHex;
-    if (textEl) textEl.textContent = GameState.currentColor.toUpperCase();
+    if (textEl) textEl.textContent = GameState.edition === 'allwild' ? 'ALL WILD' : GameState.currentColor.toUpperCase();
 
     const oldCards = discardBox.querySelectorAll('.card');
     oldCards.forEach(c => c.remove());
@@ -3578,7 +3926,13 @@ function renderGame() {
 
       const cardEl = createCardElement(card);
       if (isMyTurn) {
-        if (canPlayCard(card)) cardEl.classList.add('playable');
+        const allWildDrawLock = GameState.edition === 'allwild' &&
+          GameState.pendingAllWildDrawPlayerId === GameState.myPlayerId &&
+          GameState.pendingAllWildDrawCardIndex !== null;
+        const isAllowedCard = allWildDrawLock
+          ? originalIndex === GameState.pendingAllWildDrawCardIndex
+          : canPlayCard(card);
+        if (isAllowedCard) cardEl.classList.add('playable');
         else cardEl.classList.add('unplayable');
       }
 
@@ -3623,6 +3977,16 @@ function renderGame() {
     } else {
       unoBtn.classList.remove('alert');
     }
+  }
+
+  const allWildPassBtn = document.getElementById('allwild-pass-btn');
+  if (allWildPassBtn) {
+    const canPassDrawnCard = GameState.edition === 'allwild' &&
+      GameState.turnIndex === GameState.myPlayerId &&
+      GameState.pendingAllWildDrawPlayerId === GameState.myPlayerId &&
+      GameState.pendingAllWildDrawCardIndex !== null &&
+      !myPlayer.hasWon && !GameState.isDealing && !isTurnLocked && !hostProcessingAction;
+    allWildPassBtn.classList.toggle('show', !!canPassDrawnCard);
   }
 
   /* HIDE ALL 7 SLOTS BEFORE RENDERING */
@@ -3870,26 +4234,21 @@ function runDealVisualAnimation(onComplete) {
 
 function dealFirstDiscardCard(onComplete) {
   let firstCard = drawOneCardSafe();
-  while (getCardFace(firstCard).color.startsWith('wild')) {
-    GameState.drawPile.unshift(firstCard);
-    firstCard = drawOneCardSafe();
+  if (GameState.edition !== 'allwild') {
+    while (getCardFace(firstCard).color.startsWith('wild')) {
+      GameState.drawPile.unshift(firstCard);
+      firstCard = drawOneCardSafe();
+    }
   }
 
   const origin = getCardThrowOrigin(-1);
-
-  broadcastAnimation({
-    type: 'ANIM_CARD_THROW',
-    playerId: -1,
-    card: firstCard,
-    chosenColor: null
-  });
+  broadcastAnimation({ type: 'ANIM_CARD_THROW', playerId: -1, card: firstCard, chosenColor: null });
 
   animateCardThrow(origin, firstCard, null, (rot) => {
     GameState.discardPile.push(firstCard);
     GameState.discardRotations.push(rot);
-    GameState.currentColor = getCardFace(firstCard).color;
+    GameState.currentColor = GameState.edition === 'allwild' ? 'wild' : getCardFace(firstCard).color;
     GameState.isDealing = false;
-
     renderGame();
     broadcastState();
     if (onComplete) onComplete();
@@ -3945,6 +4304,12 @@ function triggerCenterSpecialVFX(type, text) {
     streak.classList.add('show');
     AudioEngine.penaltyZap();
     setTimeout(() => streak.classList.remove('show'), 1600);
+  } else if (type === 'allwild_draw') {
+    const streak = document.getElementById('penalty-streak-box');
+    streak.textContent = text || 'DRAW CARDS!';
+    streak.classList.add('show');
+    AudioEngine.penaltyZap();
+    setTimeout(() => streak.classList.remove('show'), 1600);
   }
 
   overlay.classList.add('active');
@@ -3953,6 +4318,8 @@ function triggerCenterSpecialVFX(type, text) {
 
 /* GAMEPLAY RULES */
 function canPlayCard(card) {
+  if (GameState.edition === 'allwild') return true;
+
   const topCard = GameState.discardPile[GameState.discardPile.length - 1];
   if (!topCard) return true;
 
@@ -3974,7 +4341,7 @@ function canPlayCard(card) {
   return false;
 }
 
-function executePlayCard(playerId, cardIdx, chosenColor = null) {
+function executePlayCard(playerId, cardIdx, chosenColor = null, targetPlayerId = null) {
   const player = GameState.players[playerId];
   if (!player || player.hasWon || player.eliminated || !GameState.inGame) {
     hostProcessingAction = false;
@@ -3994,22 +4361,54 @@ function executePlayCard(playerId, cardIdx, chosenColor = null) {
     return;
   }
 
+  const faceForValidation = getCardFace(card);
+  const isAllWild = GameState.edition === 'allwild';
+  const isPendingAllWildDraw = isAllWild && GameState.pendingAllWildDrawPlayerId === playerId;
+  if (isPendingAllWildDraw && cardIdx !== GameState.pendingAllWildDrawCardIndex) {
+    hostProcessingAction = false;
+    setTurnLocked(false);
+    return;
+  }
+
+  const needsAllWildTarget = isAllWild && (
+    faceForValidation.value === 'wild_targeted_draw_two' ||
+    faceForValidation.value === 'wild_forced_swap'
+  );
+  if (needsAllWildTarget) {
+    const targetIsValid = GameState.players.some(p =>
+      p.id === targetPlayerId && !p.hasWon && !p.eliminated &&
+      (faceForValidation.value === 'wild_targeted_draw_two' || p.id !== playerId)
+    );
+    if (!targetIsValid) {
+      hostProcessingAction = false;
+      setTurnLocked(false);
+      return;
+    }
+  }
+
   hostProcessingAction = true;
   if (playerId === GameState.myPlayerId) {
     setTurnLocked(true);
   }
 
-  const face = getCardFace(card);
+  const face = faceForValidation;
   const origin = getCardThrowOrigin(playerId, cardIdx);
 
-  let effectiveColor = face.color;
-  if (face.color.startsWith('wild')) {
-    effectiveColor = chosenColor || (GameState.flipSide === 'light' ? 'red' : 'pink');
-    GameState.currentColor = effectiveColor;
-    card.chosenColor = effectiveColor;
-  } else {
-    GameState.currentColor = face.color;
+  if (isAllWild) {
+    GameState.currentColor = 'wild';
     delete card.chosenColor;
+    GameState.pendingAllWildDrawPlayerId = null;
+    GameState.pendingAllWildDrawCardIndex = null;
+  } else {
+    let effectiveColor = face.color;
+    if (face.color.startsWith('wild')) {
+      effectiveColor = chosenColor || (GameState.flipSide === 'light' ? 'red' : 'pink');
+      GameState.currentColor = effectiveColor;
+      card.chosenColor = effectiveColor;
+    } else {
+      GameState.currentColor = face.color;
+      delete card.chosenColor;
+    }
   }
 
   broadcastAnimation({
@@ -4031,7 +4430,32 @@ function executePlayCard(playerId, cardIdx, chosenColor = null) {
     GameState.discardPile.push(card);
     GameState.discardRotations.push(rotation);
 
-    handleCardAction(face, playerId);
+    const actionResult = handleCardAction(face, playerId, targetPlayerId);
+
+    if (isAllWild && actionResult && actionResult.forcedSwapWinnerId !== null && actionResult.forcedSwapWinnerId !== undefined) {
+      const forcedSwapWinner = GameState.players[actionResult.forcedSwapWinnerId];
+      if (forcedSwapWinner && forcedSwapWinner.hand.length === 0 && !forcedSwapWinner.hasWon) {
+        forcedSwapWinner.hasWon = true;
+        forcedSwapWinner.rank = GameState.rankings.length + 1;
+        GameState.rankings.push({ id: forcedSwapWinner.id, name: forcedSwapWinner.name, avatar: forcedSwapWinner.avatar, rank: forcedSwapWinner.rank });
+        const remaining = getActivePlayers();
+        if (remaining.length <= 1) {
+          if (remaining.length === 1) {
+            const lastP = remaining[0];
+            lastP.hasWon = true;
+            lastP.rank = GameState.rankings.length + 1;
+            GameState.rankings.push({ id: lastP.id, name: lastP.name, avatar: lastP.avatar, rank: lastP.rank });
+          }
+          broadcastState();
+          broadcastAnimation({ type: 'MATCH_OVER', rankings: GameState.rankings });
+          renderGame();
+          hostProcessingAction = false;
+          setTurnLocked(false);
+          setTimeout(() => showMatchOverScreen(GameState.rankings), 800);
+          return;
+        }
+      }
+    }
 
     if (player.hand.length === 0 && !player.hasWon) {
       player.hasWon = true;
@@ -4080,9 +4504,90 @@ function executePlayCard(playerId, cardIdx, chosenColor = null) {
   });
 }
 
-function handleCardAction(face, playerId) {
+function getAllWildNextActivePlayerId(fromPlayerId = GameState.turnIndex) {
+  const active = getActivePlayers();
+  if (active.length <= 1) return null;
+
+  let idx = Number.isInteger(fromPlayerId) ? fromPlayerId : GameState.turnIndex;
+  for (let step = 0; step < GameState.players.length; step++) {
+    idx = (idx + GameState.direction + GameState.players.length) % GameState.players.length;
+    const candidate = GameState.players[idx];
+    if (candidate && !candidate.hasWon && !candidate.eliminated) return candidate.id;
+  }
+  return null;
+}
+
+function getAllWildTargetOptions(sourcePlayerId, actionValue = null) {
+  if (actionValue === 'wild_targeted_draw_two') return getActivePlayers();
+  return getActivePlayers().filter(p => p.id !== sourcePlayerId);
+}
+
+function handleCardAction(face, playerId, targetPlayerId = null) {
   const val = face.value;
   const player = GameState.players[playerId];
+
+  if (GameState.edition === 'allwild') {
+    if (val === 'wild_reverse') {
+      GameState.direction *= -1;
+      GameState.allWildSkipCount = getActivePlayers().length === 2 ? 1 : 0;
+      triggerCenterSpecialVFX('reverse', getActivePlayers().length === 2 ? 'REVERSE! (SKIP)' : 'REVERSE!');
+      return null;
+    }
+
+    if (val === 'wild_skip') {
+      GameState.allWildSkipCount = 1;
+      triggerCenterSpecialVFX('skip', 'SKIP!');
+      return null;
+    }
+
+    if (val === 'wild_skip_two') {
+      GameState.allWildSkipCount = 2;
+      triggerCenterSpecialVFX('skip_all', 'SKIP TWO!');
+      return null;
+    }
+
+    if (val === 'wild_draw_2' || val === 'wild_draw_4') {
+      const count = val === 'wild_draw_2' ? 2 : 4;
+      const targetId = getAllWildNextActivePlayerId(playerId);
+      const target = targetId === null ? null : GameState.players[targetId];
+      if (target) {
+        for (let i = 0; i < count; i++) target.hand.push(drawOneCardSafe());
+        GameState.stackedDrawCount = 0;
+        GameState.allWildSkipCount = 1;
+        broadcastAnimation({ type: 'ANIM_CARD_PICKUP', playerId: target.id, count });
+        animateCardPickup(target.id, count, () => {});
+        triggerCenterSpecialVFX('allwild_draw', `${target.name} +${count} CARDS!`);
+      }
+      return null;
+    }
+
+    if (val === 'wild_targeted_draw_two') {
+      const target = GameState.players[targetPlayerId];
+      if (target && !target.hasWon && !target.eliminated) {
+        for (let i = 0; i < 2; i++) target.hand.push(drawOneCardSafe());
+        GameState.stackedDrawCount = 0;
+        broadcastAnimation({ type: 'ANIM_CARD_PICKUP', playerId: target.id, count: 2 });
+        animateCardPickup(target.id, 2, () => {});
+        triggerCenterSpecialVFX('allwild_draw', `${target.name} +2 CARDS!`);
+      }
+      return null;
+    }
+
+    if (val === 'wild_forced_swap') {
+      const player = GameState.players[playerId];
+      const target = GameState.players[targetPlayerId];
+      if (!player || !target || target.id === playerId || target.hasWon || target.eliminated) return null;
+
+      const temp = player.hand;
+      player.hand = target.hand || [];
+      target.hand = temp || [];
+      triggerCenterSpecialVFX('reverse', `${player.name} SWAPPED HANDS WITH ${target.name}!`);
+
+      return { forcedSwapWinnerId: target.hand.length === 0 ? target.id : null };
+    }
+
+    return null;
+  }
 
   if (val === '+1') { GameState.stackedDrawCount += 1; triggerCenterSpecialVFX('penalty'); }
   else if (val === '+2') { GameState.stackedDrawCount += 2; triggerCenterSpecialVFX('penalty'); }
@@ -4152,6 +4657,24 @@ function nextTurn() {
   const active = getActivePlayers();
   if (active.length <= 1) return;
 
+  if (GameState.edition === 'allwild') {
+    if (GameState.pendingAllWildDrawPlayerId !== null) return;
+
+    const skipCount = Math.max(0, Math.min(GameState.allWildSkipCount || 0, Math.max(0, active.length - 1)));
+    GameState.allWildSkipCount = 0;
+
+    const steps = 1 + skipCount;
+    for (let step = 0; step < steps; step++) {
+      do {
+        GameState.turnIndex = (GameState.turnIndex + GameState.direction + GameState.players.length) % GameState.players.length;
+      } while (GameState.players[GameState.turnIndex].hasWon || GameState.players[GameState.turnIndex].eliminated);
+    }
+
+    const nextP = GameState.players[GameState.turnIndex];
+    if (nextP.isBot) activeBotTurnTimeout = setTimeout(botTurn, 1050);
+    return;
+  }
+
   do {
     GameState.turnIndex = (GameState.turnIndex + GameState.direction + GameState.players.length) % GameState.players.length;
   } while (GameState.players[GameState.turnIndex].hasWon || GameState.players[GameState.turnIndex].eliminated);
@@ -4192,6 +4715,52 @@ function handlePlayerDraw(playerId) {
     return;
   }
 
+  if (GameState.edition === 'allwild') {
+    if (GameState.pendingAllWildDrawPlayerId !== null) {
+      hostProcessingAction = false;
+      setTurnLocked(false);
+      return;
+    }
+
+    hostProcessingAction = true;
+    if (playerId === GameState.myPlayerId) setTurnLocked(true);
+    broadcastAnimation({ type: 'ANIM_CARD_PICKUP', playerId: playerId, count: 1 });
+
+    animateCardPickup(playerId, 1, () => {
+      if (!GameState.inGame) {
+        hostProcessingAction = false;
+        setTurnLocked(false);
+        return;
+      }
+
+      p.hand.push(drawOneCardSafe());
+      const drawnIndex = p.hand.length - 1;
+      GameState.stackedDrawCount = 0;
+
+      if (p.isBot) {
+        const diff = GameState.botDifficulty || 'standard';
+        const shouldPlay = diff === 'hard' || diff === 'standard' || Math.random() < 0.55;
+        GameState.pendingAllWildDrawPlayerId = null;
+        GameState.pendingAllWildDrawCardIndex = null;
+        hostProcessingAction = false;
+        setTurnLocked(false);
+        if (shouldPlay) executePlayCard(playerId, drawnIndex);
+        else nextTurn();
+        broadcastState();
+        renderGame();
+        return;
+      }
+
+      GameState.pendingAllWildDrawPlayerId = playerId;
+      GameState.pendingAllWildDrawCardIndex = drawnIndex;
+      hostProcessingAction = false;
+      setTurnLocked(false);
+      broadcastState();
+      renderGame();
+    });
+    return;
+  }
+
   hostProcessingAction = true;
   if (playerId === GameState.myPlayerId) {
     setTurnLocked(true);
@@ -4219,6 +4788,20 @@ function handlePlayerDraw(playerId) {
   });
 }
 
+function handleAllWildPass(playerId) {
+  if (GameState.edition !== 'allwild' || !GameState.inGame || playerId !== GameState.turnIndex) return;
+  if (GameState.pendingAllWildDrawPlayerId !== playerId) return;
+
+  GameState.pendingAllWildDrawPlayerId = null;
+  GameState.pendingAllWildDrawCardIndex = null;
+  GameState.allWildSkipCount = 0;
+  hostProcessingAction = false;
+  setTurnLocked(false);
+  nextTurn();
+  broadcastState();
+  renderGame();
+}
+
 /* BOT AI */
 function botTurn() {
   if (!GameState.inGame || hostProcessingAction) return;
@@ -4239,6 +4822,51 @@ function botTurn() {
 
   if (diff === 'easy' && Math.random() < 0.16 && GameState.stackedDrawCount === 0) {
     handlePlayerDraw(bot.id);
+    return;
+  }
+
+  if (GameState.edition === 'allwild') {
+    if (diff === 'easy' && Math.random() < 0.16) {
+      handlePlayerDraw(bot.id);
+      return;
+    }
+
+    const valid = bot.hand.map((_, idx) => idx);
+    if (valid.length === 0) return;
+
+    let chosenIdx = valid[Math.floor(Math.random() * valid.length)];
+    if (diff === 'hard') {
+      const priority = [
+        'wild_forced_swap', 'wild_targeted_draw_two', 'wild_draw_4', 'wild_skip_two',
+        'wild_draw_2', 'wild_skip', 'wild_reverse', 'WILD'
+      ];
+      for (const v of priority) {
+        const idx = valid.find(i => getCardFace(bot.hand[i]).value === v);
+        if (idx !== undefined) {
+          chosenIdx = idx;
+          break;
+        }
+      }
+    } else if (diff === 'standard') {
+      const actionIdx = valid.filter(idx => getCardFace(bot.hand[idx]).value !== 'WILD');
+      if (actionIdx.length && Math.random() < 0.72) {
+        chosenIdx = actionIdx[Math.floor(Math.random() * actionIdx.length)];
+      }
+    }
+
+    const card = bot.hand[chosenIdx];
+    const face = getCardFace(card);
+    if (face.value === 'wild_targeted_draw_two' || face.value === 'wild_forced_swap') {
+      const targets = getAllWildTargetOptions(bot.id, face.value);
+      if (!targets.length) return;
+      let target = targets[Math.floor(Math.random() * targets.length)];
+      if (diff === 'hard') {
+        target = targets.reduce((best, curr) => getHandCount(curr) < getHandCount(best) ? curr : best, targets[0]);
+      }
+      executePlayCard(bot.id, chosenIdx, null, target.id);
+    } else {
+      executePlayCard(bot.id, chosenIdx);
+    }
     return;
   }
 
@@ -4322,13 +4950,36 @@ function onHumanCardClick(idx) {
   if (GameState.turnIndex !== GameState.myPlayerId) return;
   if (GameState.players[GameState.myPlayerId].hasWon) return;
 
-  const card = GameState.players[GameState.myPlayerId].hand[idx];
-  if (!card || !canPlayCard(card)) return;
+  const player = GameState.players[GameState.myPlayerId];
+  const card = player.hand[idx];
+  if (!card) return;
+
+  const allWildPendingDraw = GameState.edition === 'allwild' &&
+    GameState.pendingAllWildDrawPlayerId === GameState.myPlayerId;
+  if (allWildPendingDraw && idx !== GameState.pendingAllWildDrawCardIndex) return;
+  if (!canPlayCard(card)) return;
 
   setTurnLocked(true);
-
   const face = getCardFace(card);
-  if (face.color.startsWith('wild')) {
+  const needsAllWildTarget = GameState.edition === 'allwild' && (
+    face.value === 'wild_targeted_draw_two' || face.value === 'wild_forced_swap'
+  );
+
+  if (GameState.edition === 'allwild') {
+    if (needsAllWildTarget) {
+      GameState.pendingWildCard = idx;
+      openAllWildTargetPicker(idx);
+    } else if (face.value === 'WILD') {
+      GameState.pendingWildCard = idx;
+      openColorPicker();
+    } else if (GameState.isHost) {
+      executePlayCard(GameState.myPlayerId, idx);
+    } else if (GameState.guestHostConn) {
+      clearTimeout(guestActionTimeout);
+      guestActionTimeout = setTimeout(() => setTurnLocked(false), 5000);
+      GameState.guestHostConn.send({ type: 'PLAY_CARD', playerId: GameState.myPlayerId, cardIndex: idx });
+    }
+  } else if (face.color.startsWith('wild')) {
     GameState.pendingWildCard = idx;
     openColorPicker();
   } else {
@@ -4346,6 +4997,7 @@ function onDrawDeckClick() {
   if (isTurnLocked || hostProcessingAction || GameState.isDealing || !GameState.inGame) return;
   if (GameState.turnIndex !== GameState.myPlayerId) return;
   if (GameState.players[GameState.myPlayerId].hasWon) return;
+  if (GameState.edition === 'allwild' && GameState.pendingAllWildDrawPlayerId === GameState.myPlayerId) return;
 
   setTurnLocked(true);
 
@@ -4356,6 +5008,67 @@ function onDrawDeckClick() {
     guestActionTimeout = setTimeout(() => setTurnLocked(false), 3500);
     GameState.guestHostConn.send({ type: 'DRAW_CARD', playerId: GameState.myPlayerId });
   }
+}
+
+function openAllWildTargetPicker(cardIdx) {
+  const modal = document.getElementById('allwild-target-modal');
+  const list = document.getElementById('allwild-target-list');
+  const title = document.getElementById('allwild-target-title');
+  const subtitle = document.getElementById('allwild-target-subtitle');
+  const player = GameState.players[GameState.myPlayerId];
+  const face = player && player.hand ? getCardFace(player.hand[cardIdx]) : null;
+  const targets = getAllWildTargetOptions(GameState.myPlayerId, face && face.value);
+
+  if (!modal || !list || !player || !face || !targets.length) {
+    setTurnLocked(false);
+    return;
+  }
+
+  GameState.pendingWildCard = cardIdx;
+  if (face.value === 'wild_targeted_draw_two') {
+    title.textContent = 'TARGETED DRAW +2';
+    subtitle.textContent = 'Choose any active player. They draw 2 cards but keep their next turn.';
+  } else {
+    title.textContent = 'FORCED SWAP';
+    subtitle.textContent = 'Choose any other active player to exchange entire hands with.';
+  }
+
+  list.innerHTML = '';
+  targets.forEach(target => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'allwild-target-btn';
+    btn.innerHTML = `<span class="allwild-target-avatar">${target.avatar || '🤖'}</span><span class="allwild-target-name">${target.name}</span>`;
+    btn.onclick = () => {
+      modal.style.display = 'none';
+      const chosenTarget = target.id;
+      const pendingIdx = GameState.pendingWildCard;
+      GameState.pendingWildCard = null;
+
+      if (GameState.isHost) {
+        executePlayCard(GameState.myPlayerId, pendingIdx, null, chosenTarget);
+      } else if (GameState.guestHostConn) {
+        clearTimeout(guestActionTimeout);
+        guestActionTimeout = setTimeout(() => setTurnLocked(false), 3500);
+        GameState.guestHostConn.send({
+          type: 'PLAY_CARD',
+          playerId: GameState.myPlayerId,
+          cardIndex: pendingIdx,
+          targetPlayerId: chosenTarget
+        });
+      }
+    };
+    list.appendChild(btn);
+  });
+
+  modal.style.display = 'flex';
+}
+
+function cancelAllWildTargetPicker() {
+  const modal = document.getElementById('allwild-target-modal');
+  if (modal) modal.style.display = 'none';
+  GameState.pendingWildCard = null;
+  setTurnLocked(false);
 }
 
 function callUno() {
@@ -4376,9 +5089,21 @@ function openColorPicker() {
   modal.style.display = 'flex';
   wheel.innerHTML = '';
 
-  const colors = GameState.flipSide === 'light' 
+  const existingNote = document.getElementById('allwild-color-call-note');
+  if (existingNote) existingNote.remove();
+  if (GameState.edition === 'allwild') {
+    const note = document.createElement('div');
+    note.id = 'allwild-color-call-note';
+    note.textContent = 'CALL A COLOR • NO GAMEPLAY EFFECT';
+    note.style.cssText = 'position:absolute;top:-26px;left:50%;transform:translateX(-50%);color:#fff;font-family:inherit;font-weight:900;font-size:.68rem;letter-spacing:.5px;text-align:center;text-shadow:0 2px 8px rgba(0,0,0,.9);pointer-events:none;white-space:nowrap;';
+    modal.querySelector('.picker-modal-content').prepend(note);
+  }
+
+  const colors = GameState.edition === 'allwild'
     ? [{ c: 'red', code: 'var(--c-red)' }, { c: 'blue', code: 'var(--c-blue)' }, { c: 'green', code: 'var(--c-green)' }, { c: 'yellow', code: 'var(--c-yellow)' }]
-    : [{ c: 'pink', code: 'var(--c-pink)' }, { c: 'teal', code: 'var(--c-teal)' }, { c: 'purple', code: 'var(--c-purple)' }, { c: 'orange', code: 'var(--c-orange)' }];
+    : (GameState.flipSide === 'light'
+      ? [{ c: 'red', code: 'var(--c-red)' }, { c: 'blue', code: 'var(--c-blue)' }, { c: 'green', code: 'var(--c-green)' }, { c: 'yellow', code: 'var(--c-yellow)' }]
+      : [{ c: 'pink', code: 'var(--c-pink)' }, { c: 'teal', code: 'var(--c-teal)' }, { c: 'purple', code: 'var(--c-purple)' }, { c: 'orange', code: 'var(--c-orange)' }]);
 
   colors.forEach(col => {
     const seg = document.createElement('div');
@@ -4386,6 +5111,9 @@ function openColorPicker() {
     seg.style.background = col.code;
     seg.onclick = () => {
       modal.style.display = 'none';
+      const note = document.getElementById('allwild-color-call-note');
+      if (note) note.remove();
+
       if (GameState.isHost) {
         executePlayCard(GameState.myPlayerId, GameState.pendingWildCard, col.c);
       } else if (GameState.guestHostConn) {
@@ -4406,13 +5134,17 @@ function openColorPicker() {
 
 function cancelColorPicker() {
   document.getElementById('color-picker-modal').style.display = 'none';
+  const note = document.getElementById('allwild-color-call-note');
+  if (note) note.remove();
   GameState.pendingWildCard = null;
   setTurnLocked(false);
 }
 
 window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    if (document.getElementById('allwild-target-modal').style.display === 'flex') cancelAllWildTargetPicker();
     if (document.getElementById('color-picker-modal').style.display === 'flex') cancelColorPicker();
+    if (document.getElementById('rulebook-modal').style.display === 'flex') closeRulebookModal();
     if (document.getElementById('solo-setup-modal').style.display === 'flex') closeSoloSetupModal();
     if (document.getElementById('emoji-picker-modal').style.display === 'flex') closeEmojiPickerModal();
   }
